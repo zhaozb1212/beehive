@@ -22,16 +22,16 @@
     </div>
     <div class="delivery-dish-detail delivery-block payonline-item">
         <span class="delivery-pay-name">餐到付款</span>
-        <span class="payonline-btn" ng-click="payStatus=!payStatus" ng-class="{ 'pay-selected':!payStatus }">√</span>
+        <span class="payonline-btn" ng-click="payStatus=!payStatus" ng-class="{ 'pay-selected':true }">√</span>
     </div>
-    <div class="delivery-dish-detail delivery-block payonline-item">
+    <!--<div class="delivery-dish-detail delivery-block payonline-item">
         <div>
             <span>在线支付</span>
 
             <div class="payonline-banner">支持微信支付</div>
         </div>
         <span class="payonline-btn" ng-click="payStatus=!payStatus" ng-class="{ 'pay-selected':payStatus }">√</span>
-    </div>
+    </div>-->
 </section>
 <div class="slide-block" ng-class="{ 'ui-slide-in':showAddr }">
     <header class="xs-header">
@@ -101,5 +101,5 @@
     <div class="cart-rmb">
         <span class="ui-rmb cart-dish-cartprice" ng-bind="totalPrice()">43</span>
     </div>
-    <button class="ui-btn btn-confirm">确认下单</button>
+    <button class="ui-btn btn-confirm" ng-click="checkCart()">确认下单</button>
 </footer>

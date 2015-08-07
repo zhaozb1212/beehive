@@ -12,6 +12,8 @@ angular.module('mxs.services', ['ngResource'])
         });
     }])
 
-    .factory('address', ['$resource', function ($resource) {
-        return $resource('mock/address.json');
+    .factory('address', ['$resource', '$rootScope', function ($resource, $rootScope) {
+        return $resource($rootScope.RESTBASE + '/user/alldistribution', $rootScope.defaultSig, {
+            pullDishes: {method: "POST"}
+        });
     }]);

@@ -652,3 +652,79 @@ textarea.ui-textarea {
 .dlist-item-content {
     width: 92%;
 }
+
+/*register begin*/
+.ui-flashbar, .ui-padding-block {
+    padding: 10px;
+}
+
+.ui-flashbar {
+    background: #fffeea;
+    border-bottom: 1px solid #ddd;
+    font-size: .875rem;
+}
+
+.ui-flashbar.error {
+    color: #ea3106;
+}
+
+.logreg-form {
+    margin: 10px;
+}
+
+.logreg-inputs {
+    margin-top: 10px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+}
+
+.input-group {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    margin: 0;
+}
+
+button, input {
+    line-height: normal;
+}
+
+input {
+    -webkit-appearance: none !important;
+}
+
+input.ui-input {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+input.ui-input {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 8px 4px;
+    background: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    font-size: 1rem;
+}
+
+.input-tip {
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    color: #ea3106;
+    font-size: 0.875rem;
+    line-height: 1.8;
+    clear: both;
+    -webkit-transition: max-height .3s;
+    transition: max-height .3s;
+}
+
+/*register end*/

@@ -10,25 +10,22 @@
     <title>测试</title>
 </head>
 <body>
-<button type="button" id="payBtn">支付测试</button>
+<!--<button type="button" id="payBtn">支付测试</button>-->
 <div>
-    <label for="apiKey">API Key</label>
-    <input type="text" id="apiKey">
-    <button id="checkBtn">check API</button>
-    <textarea id="winText" cols="30" rows="15">
-
-    </textarea>
+    <!-- <label for="apiKey">API Key</label>
+     <input type="text" id="apiKey">
+     <button id="checkBtn">check API</button>-->
+    <textarea id="winText" cols="30" rows="15"></textarea>
 </div>
 <script src="scripts/jquery-2.1.4.min.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
     var isWeixin = /MicroMessenger/.test(navigator.userAgent);
 
-    document.getElementById("payBtn").onclick = function () {
-        alert('payBtn')
-    };
-
-    function getCode() {
+    /* document.getElementById("payBtn").onclick = function () {
+     alert('payBtn')
+     };*/
+    function getQuery() {
         var queryObj = {};
         var queryString = location.search.slice(1);
         var aQuery = queryString.split('&');
@@ -37,11 +34,23 @@
             queryObj[item[0]] = item[1] || '';
         }
 
-        return queryObj;
+        return queryObj["code"] || "";
     }
     //var urlWidthSearch = location.href.split("#")[0];
     //var paramLocation = urlWidthSearch.split('?')[0] + ":80?" + urlWidthSearch.split('?')[1];
-
+    document.getElementById('winText').innerHTML = JSON.stringify(getQuery());
+    $.ajax({
+        url: "http://tianjunmedia.com/beehive/microsite/user/userinfo",
+        type: "POST",
+        contentType: "application/json",
+        dataType: 'JSON',
+        data: {
+            sig: "DBE8317A0D713425B738C762D1639492",
+            code: getQuery() + ""
+        }
+    }).done(function (data) {
+        document.getElementById('winText').innerHTML = getQuery() + " |--split--|" + JSON.stringify(data);
+    });
     (function () {
         var jsApiConfigDeferred = $.ajax({
             url: "http://tianjunmedia.com/beehive/microsite/user/getjsapiconfig",
@@ -55,7 +64,7 @@
         //"http://tianjunmedia.com:80/beehive/test2.html" + location.search
         jsApiConfigDeferred.done(function (res) {
             var config = res.data;
-            document.getElementById('winText').innerHTML = "url: " + location.href + " | data: " + JSON.stringify(res.data);
+            //document.getElementById('winText').innerHTML = "url: " + location.href + " | data: " + JSON.stringify(res.data);
             var wxConfig = {
                 debug: true,
                 appId: config.appId,

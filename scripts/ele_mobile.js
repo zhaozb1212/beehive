@@ -193,7 +193,7 @@ angular.module("meleme", ["ngRoute", "ngResource", "ngAnimate", "infinite-scroll
     header: {className: "eleme-header", height: 44},
     tab: {className: "restaurant-tabs", height: 38},
     cart: {className: "menu-cart", height: 32}
-}).constant("RESTAURANT_FLAVORS", ["ÖĞÊ½", "Î÷Ê½", "¸ÛÊ½", "ÄÌ²è", "ÉÕ¿¾", "ÈÕÊ½", "º«Ê½", "Ìğµã", "ºº±¤", "ÇåÕæ"]);
+}).constant("RESTAURANT_FLAVORS", ["ä¸­å¼", "è¥¿å¼", "æ¸¯å¼", "å¥¶èŒ¶", "çƒ§çƒ¤", "æ—¥å¼", "éŸ©å¼", "ç”œç‚¹", "æ±‰å ¡", "æ¸…çœŸ"]);
 angular.module("meleme.filters", []).filter("split", [function () {
     return function (a, b) {
         return b = b || "-", a.split("").join(b)
@@ -208,7 +208,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
     }
 }]).filter("truncate", [function () {
     return function (a, b, c) {
-        return b = isNaN(b) ? b : 10, c = String(c) || "¡­", a.length > b || a.length - c.length > b ? String(a).substring(0, b - c.length) + c : a
+        return b = isNaN(b) ? b : 10, c = String(c) || "â€¦", a.length > b || a.length - c.length > b ? String(a).substring(0, b - c.length) + c : a
     }
 }]).filter("hideMobileNumber", [function () {
     return function (a) {
@@ -233,19 +233,19 @@ angular.module("meleme.filters", []).filter("split", [function () {
             var b, c, d = new Date(Date.now() + 288e6).toISOString().match(/(..):(..)/)[0];
             return a.some(function (a) {
                 return b = a.match(/..:../g)[0], b > d ? (c = b, !0) : void 0
-            }), c || "Ã÷Ìì" + a[0].match(/..:../)[0]
+            }), c || "æ˜å¤©" + a[0].match(/..:../)[0]
         }
     }
 }).filter("distanceFormat", function () {
     return function (a) {
-        return !a || isNaN(Number(a)) ? null : Number(a) >= 1e3 ? Number(a) / 1e3 + "Ç§Ã×" : Number(a) + "Ã×"
+        return !a || isNaN(Number(a)) ? null : Number(a) >= 1e3 ? Number(a) / 1e3 + "åƒç±³" : Number(a) + "ç±³"
     }
 }).filter("timeDiff", [function () {
     return function (a) {
         var b = (new Date).getTime(), c = a.split("-");
         c = (b - new Date(c[0], c[1] - 1, c[2]).getTime()) / 864e5 - 1;
-        var d = c > 0 ? " ÌìÇ°" : " Ììºó";
-        return c = Math.abs(c.toFixed()), c ? c + d : "½ñÌìºó"
+        var d = c > 0 ? " å¤©å‰" : " å¤©å";
+        return c = Math.abs(c.toFixed()), c ? c + d : "ä»Šå¤©å"
     }
 }]), void function () {
     var a = Date.parse;
@@ -268,7 +268,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         document.cookie = "track_fingerprint_1=" + a + "; Expires=Wed, 31 Dec 2098 16:00:00 GMT; Domain=" + g + "; Path=/"
     }
 }(), angular.module("meleme.controllers").controller("bindMobileCtrl", ["$scope", "Page", "Mobile", "$rootScope", "VerifyCode", "UserAgent", "$location", "$timeout", function (a, b, c, d, e, f, g, h) {
-    a.isFromApp && (b.title = "°ó¶¨ÊÖ»ú"), d.profile.$promise.then(function () {
+    a.isFromApp && (b.title = "ç»‘å®šæ‰‹æœº"), d.profile.$promise.then(function () {
         return d.profile.user_mobile_token || 1 !== d.profile.is_mobile_valid ? void 0 : g.url("/profile/unbind")
     }), a.user = {
         mobile: "",
@@ -280,17 +280,17 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }, function (b) {
             switch (a.user.serverError = !0, b.data.name) {
                 case"VALIDATION_FAILED":
-                    a.user.errorMsg = "ÇëÌîĞ´ÊÖ»úºÅÂë";
+                    a.user.errorMsg = "è¯·å¡«å†™æ‰‹æœºå·ç ";
                     break;
                 default:
-                    a.user.errorMsg = "·şÎñÆ÷ºÃÏñÓĞÎÊÌâÀ²"
+                    a.user.errorMsg = "æœåŠ¡å™¨å¥½åƒæœ‰é—®é¢˜å•¦"
             }
         })
     }, a.bind = function () {
         return Number(d.profile.mobile) === Number(a.user.mobile) ? swal({
-            title: "ÎŞ·¨°ó¶¨",
-            text: "ĞÂÊÖ»úºÅÍ¬µ±Ç°°ó¶¨ÊÖ»úºÅÒ»Ñù",
-            confirmButtonText: "È·¶¨"
+            title: "æ— æ³•ç»‘å®š",
+            text: "æ–°æ‰‹æœºå·åŒå½“å‰ç»‘å®šæ‰‹æœºå·ä¸€æ ·",
+            confirmButtonText: "ç¡®å®š"
         }) : void c.bindMobile({
             mobile_token: a.user.mobile_token,
             user_mobile_token: d.profile.user_mobile_token
@@ -302,11 +302,11 @@ angular.module("meleme.filters", []).filter("split", [function () {
             switch (a.user.serverError = !0, b.data.name) {
                 case"MOBILE_OCCUPIED_WITHOUT_BALANCE":
                     swal({
-                        title: "ÎŞ·¨°ó¶¨",
-                        text: "¸ÃÊÖ»úºÅÒÑ±»ÆäËûÕËºÅ°ó¶¨¡£Èç¹û¼ÌĞø£¬Ô­ÕËºÅ½«×Ô¶¯½â°ó£¬È·ÈÏ°ó¶¨Âğ£¿",
-                        confirmButtonText: "È·¶¨",
+                        title: "æ— æ³•ç»‘å®š",
+                        text: "è¯¥æ‰‹æœºå·å·²è¢«å…¶ä»–è´¦å·ç»‘å®šã€‚å¦‚æœç»§ç»­ï¼ŒåŸè´¦å·å°†è‡ªåŠ¨è§£ç»‘ï¼Œç¡®è®¤ç»‘å®šå—ï¼Ÿ",
+                        confirmButtonText: "ç¡®å®š",
                         showCancelButton: "true",
-                        cancelButtonText: "È¡Ïû"
+                        cancelButtonText: "å–æ¶ˆ"
                     }, function (b) {
                         b && c.bindMobile({
                             mobile_token: a.user.mobile_token,
@@ -318,16 +318,16 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     });
                     break;
                 case"MOBILE_OCCUPIED_WITH_BALANCE":
-                    swal({title: "ÎŞ·¨°ó¶¨", text: "¸ÃÊÖ»úºÅÒÑ±»ÆäËûÕËºÅ°ó¶¨£¬ÇÒÔ­ÕËºÅÄÚÓĞÓà¶î»òºì°ü£¬½¨ÒéÖ±½ÓÊ¹ÓÃÔ­ÕËºÅµÇÂ¼", confirmButtonText: "ÖªµÀÁË"});
+                    swal({title: "æ— æ³•ç»‘å®š", text: "è¯¥æ‰‹æœºå·å·²è¢«å…¶ä»–è´¦å·ç»‘å®šï¼Œä¸”åŸè´¦å·å†…æœ‰ä½™é¢æˆ–çº¢åŒ…ï¼Œå»ºè®®ç›´æ¥ä½¿ç”¨åŸè´¦å·ç™»å½•", confirmButtonText: "çŸ¥é“äº†"});
                     break;
                 case"INVALID_MOBILE_TOKEN":
-                    a.user.errorMsg = "ÎŞĞ§µÄÊÖ»úÁîÅÆ";
+                    a.user.errorMsg = "æ— æ•ˆçš„æ‰‹æœºä»¤ç‰Œ";
                     break;
                 case"INVALID_USER_MOBILE_TOKEN":
-                    a.user.errorMsg = "ÎŞĞ§µÄÓÃ»§ÊÖ»úÁîÅÆ";
+                    a.user.errorMsg = "æ— æ•ˆçš„ç”¨æˆ·æ‰‹æœºä»¤ç‰Œ";
                     break;
                 default:
-                    a.user.errorMsg = "Î´ÖªµÄ·şÎñÆ÷´íÎó"
+                    a.user.errorMsg = "æœªçŸ¥çš„æœåŠ¡å™¨é”™è¯¯"
             }
         })
     }, a.formSubmit = function (b) {
@@ -335,7 +335,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
             validate_token: a.user.validate_token,
             validate_code: b.code
         }, function (b) {
-            a.user.mobile_token = b.mobile_token, a.countdown = !1, a.user.serverError = !b.validate, b.validate ? a.bind() : (a.user.serverError = !0, a.user.errorMsg = "ÑéÖ¤Âë´íÎó", a.countdown = !1)
+            a.user.mobile_token = b.mobile_token, a.countdown = !1, a.user.serverError = !b.validate, b.validate ? a.bind() : (a.user.serverError = !0, a.user.errorMsg = "éªŒè¯ç é”™è¯¯", a.countdown = !1)
         })
     }
 }]), angular.module("meleme.cart")
@@ -348,15 +348,15 @@ angular.module("meleme.filters", []).filter("split", [function () {
                 errorMsg: null
             }, a.list = h.list, a.totalAmount = h.totalAmount, a.totalPrice = h.totalPrice, a.getRestaurant = h.getRestaurant, a.removeFood = h.remove, "/cart" === c.path() && wechat("hideOptionMenu"), a.spell.enable) {
             var k = localStorage.getItem("wechatInfo");
-            k = k ? JSON.parse(k) : {}, a.cartTitle = "ÒÑÑ¡ÔñÃÀÊ³", a.spell.url = "?cartId=" + i.cartId + "&sig=" + i.sig + "&spell=1", a.spellName = k.nickname;
+            k = k ? JSON.parse(k) : {}, a.cartTitle = "å·²é€‰æ‹©ç¾é£Ÿ", a.spell.url = "?cartId=" + i.cartId + "&sig=" + i.sig + "&spell=1", a.spellName = k.nickname;
             var l, m = function () {
                 return "/spell" === c.path() && l ? clearTimeout(l) : void e.get({
                     cartId: i.cartId,
                     sig: i.sig
                 }, function (b) {
                     return b.error ? c.redirect("/404") : void(f(b.data) > 0 && !a.spell.finish && swal({
-                        title: "³ö´íÀ²",
-                        text: "Æ´µ¥ÒÑ¾­Í£Ö¹£¬Çë·µ»Ø²é¿´×´Ì¬£¡",
+                        title: "å‡ºé”™å•¦",
+                        text: "æ‹¼å•å·²ç»åœæ­¢ï¼Œè¯·è¿”å›æŸ¥çœ‹çŠ¶æ€ï¼",
                         type: "warning"
                     }, function () {
                         c.url("/spell?spell=1&cartId=" + i.cartId + "&sig=" + i.sig)
@@ -364,7 +364,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
                 })
             };
             m(), l = setTimeout(m, 1e4)
-        } else a.cartTitle = "ÃÀÊ³Àº×Ó", a.spell.enable = !1;
+        } else a.cartTitle = "ç¾é£Ÿç¯®å­", a.spell.enable = !1;
         a.checkCart = function () {
             if (a.spell.enable || c.url("/delivery?total=" + a.totalPrice() + "&name=" + h.getRestaurant().name_for_url), a.spellName) {
                 var b = [];
@@ -397,7 +397,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
                 var e = b.food, f = b.restaurant || b.getRestaurant();
                 (5 === f.status || 1 === f.status) && (a.isEmpty() && a.setRestaurant(f), b.add = function () {
                     if (f.name_for_url === a.getRestaurant().name_for_url || a.isEmpty())a.add(e); else {
-                        var b = confirm("ÄãµÄÃÀÊ³Àº×ÓÀïÓĞÆäËü²ÍÌüµÄÃÀÊ³£¬Çå¿ÕÃÀÊ³Àº×ÓÂğ£¿");
+                        var b = confirm("ä½ çš„ç¾é£Ÿç¯®å­é‡Œæœ‰å…¶å®ƒé¤å…çš„ç¾é£Ÿï¼Œæ¸…ç©ºç¾é£Ÿç¯®å­å—ï¼Ÿ");
                         if (!b)return;
                         a.clear(), a.setRestaurant(f), a.add(e)
                     }
@@ -510,7 +510,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
             return a.post({come_from: "mobile"}).$promise.then(function (a) {
                 f.id = a.cart.id, f.sig = a.sig, localStorage.setItem("cartId", JSON.stringify(a.cart.id)), localStorage.setItem("cartSig", JSON.stringify(a.sig)), localStorage.setItem("cartList", "{}"), localStorage.setItem("cartRestaurant", "{}"), c.resolve(a)
             }, function () {
-                throw"¹ºÎï³µ´´½¨Ê§°Ü"
+                throw"è´­ç‰©è½¦åˆ›å»ºå¤±è´¥"
             }), c.$promise = c.promise, c.$promise
         }, f.get = function () {
             var a = b.defer();
@@ -544,7 +544,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
     }]), angular.module("meleme.controllers").controller("deliveryCtrl", ["$scope", "$rootScope", "$location", "newCart", "Restaurant", "Address", "Invoice", "Order", "Mcb", "Discount", "ProfileUser", "ProfileAddr", function (a, b, c, d, e, f, g, h, i, j, k, l) {
     d.init();
     var m = d.sync().$promise;
-    a.payInfo = {item: ["²Íµ½¸¶¿î", "ÔÚÏßÖ§¸¶"], index: 0}, a.server = {done: !1}, a.toggle = function (b) {
+    a.payInfo = {item: ["é¤åˆ°ä»˜æ¬¾", "åœ¨çº¿æ”¯ä»˜"], index: 0}, a.server = {done: !1}, a.toggle = function (b) {
         a.payInfo.index = b, a.payMethod(b)
     };
     var n = function (b, c) {
@@ -559,17 +559,17 @@ angular.module("meleme.filters", []).filter("split", [function () {
         d.change("is_online_paid", {is_online_paid: b || 0}).$promise.then(function (b) {
             b.error || (a.server.foods = b.group[0], a.server.totalPrice = b.total, a.server.extras = b.extra, a.server.abandoned_extras = b.abandoned_extra)
         }, function () {
-            console.error("»ñÈ¡Ö§¸¶·½Ê½ÓÅ»İÊ§°Ü")
+            console.error("è·å–æ”¯ä»˜æ–¹å¼ä¼˜æƒ å¤±è´¥")
         })
     };
     a.payMethod = q, a.payMethod(), e.get({nameForUrl: c.search().name}, function (b) {
         a.restaurant = b, a.payOnlineInfo = function () {
-            return b.is_online_payment ? "Ö§³ÖÓà¶î£¬Ö§¸¶±¦Ö§¸¶£¬¿ÉÒÔÊ¹ÓÃºì°ü" : "¸Ã²ÍÌü²»Ö§³ÖÔÚÏßÖ§¸¶"
+            return b.is_online_payment ? "æ”¯æŒä½™é¢ï¼Œæ”¯ä»˜å®æ”¯ä»˜ï¼Œå¯ä»¥ä½¿ç”¨çº¢åŒ…" : "è¯¥é¤å…ä¸æ”¯æŒåœ¨çº¿æ”¯ä»˜"
         }
     }), m.then(function (b) {
         a.server.foods = b.group[0], a.server.totalPrice = b.total, a.server.extras = b.extra, a.server.abandoned_extras = b.abandoned_extra
     }, function (a) {
-        console.error("¹ºÎï³µÍ¬²½Ê§°Ü due to: " + a)
+        console.error("è´­ç‰©è½¦åŒæ­¥å¤±è´¥ due to: " + a)
     }), a.checkRecipt = function (b) {
         if (b && b.is_support_invoice) {
             var d = c.search().total;
@@ -635,7 +635,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         })
     }, a.setCurrent = function (c, d) {
         var e, f = "invoice" === d, g = f ? a.invoice.data : a.address;
-        -1 !== c && (e = g[c]), f && -1 === c && (e = {invoice_pay_to: "²»ĞèÒª·¢Æ±"}), angular.extend(r, e), r.invoice_pay_to && (r.invoice = r.invoice_pay_to), delete r.id, delete r.$$hashKey, delete r.invoice_pay_to, n(f ? "currentInvoice" : "currentAddr", e), a.showAddr = null, a.showRecipt = null, a.editing = !1, f ? a.selectedInvoice = c : l.update({address_id: a.address[c].id}, function (a) {
+        -1 !== c && (e = g[c]), f && -1 === c && (e = {invoice_pay_to: "ä¸éœ€è¦å‘ç¥¨"}), angular.extend(r, e), r.invoice_pay_to && (r.invoice = r.invoice_pay_to), delete r.id, delete r.$$hashKey, delete r.invoice_pay_to, n(f ? "currentInvoice" : "currentAddr", e), a.showAddr = null, a.showRecipt = null, a.editing = !1, f ? a.selectedInvoice = c : l.update({address_id: a.address[c].id}, function (a) {
             a.error || s(b.profile)
         })
     }, a.message = function (b, c) {
@@ -644,12 +644,12 @@ angular.module("meleme.filters", []).filter("split", [function () {
         window.location = "https://" + a.MOBILEHOST + "/login?redirect=" + encodeURIComponent(c.absUrl())
     };
     var u = function () {
-        r.name && (r.consignee = r.name, "²»ĞèÒª·¢Æ±" === r.invoice && (r.invoice = ""), delete r.name), a.payInfo.index && (r.is_online_paid = 1), m.then(function () {
+        r.name && (r.consignee = r.name, "ä¸éœ€è¦å‘ç¥¨" === r.invoice && (r.invoice = ""), delete r.name), a.payInfo.index && (r.is_online_paid = 1), m.then(function () {
             h.save(angular.$().param(r), function (b) {
-                return b.error ? (a.orderClosed = !1, swal("³ö´íÀ²", b.error.msg, "warning")) : (c.url(a.payInfo.index ? "/pay?id=" + b.data.order_id + "&status=start" : "/order/" + b.data.order_id + "/success"), void(a.orderClosed = !1))
+                return b.error ? (a.orderClosed = !1, swal("å‡ºé”™å•¦", b.error.msg, "warning")) : (c.url(a.payInfo.index ? "/pay?id=" + b.data.order_id + "&status=start" : "/order/" + b.data.order_id + "/success"), void(a.orderClosed = !1))
             })
         }, function () {
-            console.error("¹ºÎï³µĞÅÏ¢Í¬²½Ê§°Ü")
+            console.error("è´­ç‰©è½¦ä¿¡æ¯åŒæ­¥å¤±è´¥")
         })
     };
     a.instaCheckCode = function () {
@@ -668,7 +668,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
     }, a.checkout = function () {
         if (a.note && (r.note = a.note), !r.address && (o(r, a.currentAddr), o(r, b.currentInvoice), !r.address))return a.addressNotFill = !0;
         var c;
-        c = a.supportInvoice && a.currentInvoice ? "²»ĞèÒª·¢Æ±" === a.currentInvoice.invoice_pay_to ? "" : a.currentInvoice.invoice_pay_to : "", a.orderClosed = !0, i.get({
+        c = a.supportInvoice && a.currentInvoice ? "ä¸éœ€è¦å‘ç¥¨" === a.currentInvoice.invoice_pay_to ? "" : a.currentInvoice.invoice_pay_to : "", a.orderClosed = !0, i.get({
             action: "check",
             csrf_token: b.profile.csrf_token,
             phone: r.phone,
@@ -681,7 +681,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     var c = b.data;
                     switch (!0) {
                         case 3 === c.code:
-                            swal("³ö´íÀ²", "±¾´Î¶©µ¥±»ÏµÍ³ÅĞ¶¨ÎªÒì³££¬ÎŞ·¨Õı³£ÏÂµ¥£¬ÇëÁªÏµ¶öÁËÃ´¿Í·ş", "warning");
+                            swal("å‡ºé”™å•¦", "æœ¬æ¬¡è®¢å•è¢«ç³»ç»Ÿåˆ¤å®šä¸ºå¼‚å¸¸ï¼Œæ— æ³•æ­£å¸¸ä¸‹å•ï¼Œè¯·è”ç³»é¥¿äº†ä¹ˆå®¢æœ", "warning");
                             break;
                         case 2 === c.code && "Voice" === c.type:
                             a.McbPreAct = !0, a.showMcb = !0;
@@ -693,7 +693,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
                             u();
                             break;
                         default:
-                            return swal("³ö´íÀ²", "Î´Öª´íÎó£¬ÇëÁªÏµ¿Í·ş", "warning")
+                            return swal("å‡ºé”™å•¦", "æœªçŸ¥é”™è¯¯ï¼Œè¯·è”ç³»å®¢æœ", "warning")
                     }
                 }
             })["finally"](function () {
@@ -705,7 +705,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         a.mcb("send", a.voiceCode ? "voice" : "sms")
     }
 }]), angular.module("meleme.controllers").controller("findPasswordCtrl", ["$scope", "$rootScope", "VerifyCode", "Captcha", "ProfileExists", "Findpw", function (a, b, c, d, e, f) {
-    b.isFromApp && (b.Page.title = "ÖØÖÃÃÜÂë");
+    b.isFromApp && (b.Page.title = "é‡ç½®å¯†ç ");
     var g = function (b) {
         a.infoErrorMsg = b.message, a.nextClicked = !1
     };
@@ -723,7 +723,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     a.nextClicked = !1, a.countdown = !0, a.showSet = !0, a.info.validate_token = b.validate_token
                 }, function (b) {
                     g(b.data), a.refreshCode()
-                })) : (a.infoErrorMsg = "mobile" === d ? "ÄúÊäÈëµÄÊÖ»úºÅÂëÉĞÎ´°ó¶¨" : "ÄúÊäÈëµÄÓÊÏäµØÖ·²»´æÔÚ»òÕßÉĞÎ´°ó¶¨", a.nextClicked = !1, a.refreshCode())
+                })) : (a.infoErrorMsg = "mobile" === d ? "æ‚¨è¾“å…¥çš„æ‰‹æœºå·ç å°šæœªç»‘å®š" : "æ‚¨è¾“å…¥çš„é‚®ç®±åœ°å€ä¸å­˜åœ¨æˆ–è€…å°šæœªç»‘å®š", a.nextClicked = !1, a.refreshCode())
             }, function (a) {
                 g(a)
             })
@@ -752,7 +752,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     }, function (a) {
                         g(a.data)
                     })
-                } else a.infoErrorMsg = "ÑéÖ¤Âë´íÎó,ÇëÊäÈëÕıÈ·µÄÑéÖ¤Âë", a.nextClicked = !1
+                } else a.infoErrorMsg = "éªŒè¯ç é”™è¯¯,è¯·è¾“å…¥æ­£ç¡®çš„éªŒè¯ç ", a.nextClicked = !1
             }, function (a) {
                 g(a.data)
             })
@@ -850,17 +850,17 @@ angular.module("meleme.filters", []).filter("split", [function () {
         d.url("/search/" + c.geohash.replace(/&premium=\d$/, ""))
     }, localStorage.setItem("geohash", c.geohash)
 }]), angular.module("meleme.controllers").controller("giftDetailCtrl", ["$scope", "$rootScope", "$location", "Gift", "UsersGift", "$routeParams", "Address", "ProfileAddr", "SweetAlert", function (a, b, c, d, e, f, g, h, i) {
-    b.isFromApp && (b.Page.title = "ÉÌÆ·ÏêÇé"), b.loading = !0;
+    b.isFromApp && (b.Page.title = "å•†å“è¯¦æƒ…"), b.loading = !0;
     var j, k = function (e) {
         d.get({gift_id: f.id}, function (d) {
             b.loading = !1, a.gift = d, a.hasLogin = e.user_id ? !0 : !1, a.hasLogin ? (a.canExchange = a.point >= a.gift.price && a.gift.amount > 0 ? !0 : !1, a.gotoExchange = function () {
                 a.showAddr = !0, a.showNewAddr = !1
             }) : a.gotoExchange = function () {
                 i.swal({
-                    title: "µÇÂ¼ºó¿É¶Ò»»ÀñÆ·",
-                    confirmButtonText: "µÇÂ¼",
+                    title: "ç™»å½•åå¯å…‘æ¢ç¤¼å“",
+                    confirmButtonText: "ç™»å½•",
                     showCancelButton: !0,
-                    cancelButtonText: "ÒÔºóÔÙËµ"
+                    cancelButtonText: "ä»¥åå†è¯´"
                 }, function (d) {
                     if (d) {
                         var e = b.isFromApp ? "eleme://login" : "https://" + a.MOBILEHOST + "/login?redirect=" + encodeURIComponent(c.absUrl());
@@ -877,10 +877,10 @@ angular.module("meleme.filters", []).filter("split", [function () {
     b.profile.$promise.then(function (c) {
         a.point = c.point, k(c), l(c), a.selectAddr = function (d) {
             i.swal({
-                title: "È·ÈÏÊ¹ÓÃ¸ÃµØÖ·",
-                confirmButtonText: "È·ÈÏ",
+                title: "ç¡®è®¤ä½¿ç”¨è¯¥åœ°å€",
+                confirmButtonText: "ç¡®è®¤",
                 showCancelButton: !0,
-                cancelButtonText: "È¡Ïû"
+                cancelButtonText: "å–æ¶ˆ"
             }, function (e) {
                 e && (j !== a.address[d].id ? (j = a.address[d].id, h.update({address_id: j}, function (e) {
                     b.profile.current_address_id = j, m(c, a.address[d])
@@ -892,11 +892,11 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     var e = d.address_id;
                     h.update({address_id: e}, function (d) {
                         d.error || (l(c), i.swal({
-                            title: "ĞÂÔöµØÖ·³É¹¦",
-                            text: "ÊÇ·ñÊ¹ÓÃ¸ÃµØÖ·?",
-                            confirmButtonText: "È·ÈÏ",
+                            title: "æ–°å¢åœ°å€æˆåŠŸ",
+                            text: "æ˜¯å¦ä½¿ç”¨è¯¥åœ°å€?",
+                            confirmButtonText: "ç¡®è®¤",
                             showCancelButton: !0,
-                            cancelButtonText: "È¡Ïû"
+                            cancelButtonText: "å–æ¶ˆ"
                         }, function (d) {
                             d ? m(c, b) : (a.showAddr = !0, a.showNewAddr = !1, a.addr = {}, a.addrform.$setPristine(), a.addrform.submitted = !1)
                         }))
@@ -925,13 +925,13 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }, function (b) {
             a.showSuccesssend = !0, a.showNewAddr = !1, a.showAddr = !1
         }, function (a) {
-            i.swal({title: "³ö´íÀ²", text: a.data.message, type: "warning"}, function () {
+            i.swal({title: "å‡ºé”™å•¦", text: a.data.message, type: "warning"}, function () {
                 c.url("gift/" + f.id)
             })
         })
     }
 }]), angular.module("meleme.controllers").controller("giftCtrl", ["$scope", "$rootScope", "$location", "Gift", function (a, b, c, d) {
-    b.isFromApp && (b.Page.title = "»ı·ÖÉÌ³Ç"), b.profile.$promise.then(function (b) {
+    b.isFromApp && (b.Page.title = "ç§¯åˆ†å•†åŸ"), b.profile.$promise.then(function (b) {
         a.point = b.point
     }, function (a) {
         console.log(a)
@@ -998,7 +998,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
     }
 }]), angular.module("meleme.controllers").controller("homeCtrl", ["$scope", "$location", "Page", "City", function (a, b, c, d) {
     var e = b.search(), f = localStorage.getItem("geohash");
-    return (e.force || /\bpsn=|\bpguid=/.test(f)) && (localStorage.removeItem("geohash"), f = !1), f ? b.url("/place/" + f) : (a.currentCity = d.get({type: "guess"}), a.hotCities = d.get({type: "hot"}), a.cities = d.get({type: "group"}), c.title = "½ĞÍâÂôÉÏ¶öÁËÃ´", void(a.setCity = function (a, b) {
+    return (e.force || /\bpsn=|\bpguid=/.test(f)) && (localStorage.removeItem("geohash"), f = !1), f ? b.url("/place/" + f) : (a.currentCity = d.get({type: "guess"}), a.hotCities = d.get({type: "hot"}), a.cities = d.get({type: "group"}), c.title = "å«å¤–å–ä¸Šé¥¿äº†ä¹ˆ", void(a.setCity = function (a, b) {
         c.city.name = a, c.city.id = b
     }))
 }]), angular.module("meleme.controllers").controller("hongbaoCtrl", ["$scope", "$http", "$location", "$rootScope", "$q", "$routeParams", "$timeout", "Page", "Weixin", "WechatInfo", "WeixinHongbao", "SweetAlert", "I18N", function (a, b, c, d, e, f, g, h, i, j, k, l, m) {
@@ -1007,12 +1007,12 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }), !/(MicroMessenger|IEMobile)/i.test(navigator.userAgent))return d.loading = !1, void l.swal({
         type: "error",
         title: "",
-        text: "ÇëÔÚÎ¢ĞÅä¯ÀÀÆ÷ÖĞ´ò¿ªÁ´½Ó",
+        text: "è¯·åœ¨å¾®ä¿¡æµè§ˆå™¨ä¸­æ‰“å¼€é“¾æ¥",
         showConfirmButton: !1
     }, function () {
         location.reload()
     });
-    h.title = "³Ôµ½±¥£¬Íæµ½Ë¬£¬¶öÁËÃ´Ğ¯ÊÖÌÚÑ¶ÓÎÏ·¸øÄã·¢ºì°üÀ²~", a.caption = "¿É¿Ú¿ÉÀÖËÍÄã¶öÁËÃ´ºì°ü¡£", void function () {
+    h.title = "åƒåˆ°é¥±ï¼Œç©åˆ°çˆ½ï¼Œé¥¿äº†ä¹ˆæºæ‰‹è…¾è®¯æ¸¸æˆç»™ä½ å‘çº¢åŒ…å•¦~", a.caption = "å¯å£å¯ä¹é€ä½ é¥¿äº†ä¹ˆçº¢åŒ…ã€‚", void function () {
         function c(b) {
             if ("ok" === b.status) {
                 var c = b.data, d = {
@@ -1066,9 +1066,9 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     throw new Error("Hongbao Grabbing Error: " + JSON.stringify(a && a.data || a))
                 }), {status_code: 1, records: [], is_success: !1}
             }).then(function (b) {
-                a.statusText = (m.hongbao.statusTextMap[b.status_code] || "´íÎóÀ²").replace(/\{(\w+)\}/g, function (a, c) {
+                a.statusText = (m.hongbao.statusTextMap[b.status_code] || "é”™è¯¯å•¦").replace(/\{(\w+)\}/g, function (a, c) {
                     return b[c]
-                }), a.caption = m.hongbao.statusCaptionMap[b.status_code] || "ÕâÊÇ¸öÉñÆæµÄ´íÎó", a.info = b, a.scene = "SUCCESS"
+                }), a.caption = m.hongbao.statusCaptionMap[b.status_code] || "è¿™æ˜¯ä¸ªç¥å¥‡çš„é”™è¯¯", a.info = b, a.scene = "SUCCESS"
             }) : n.load().then(a.grab.bind(a, b))
     }, a.getPhone = function () {
         var a = k.get({sign: n.key, action: "phone", weixin_id: n.openid});
@@ -1082,7 +1082,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
 }]), angular.module("meleme.controllers").controller("hongbaoPrepareCtrl", ["$scope", function (a) {
     a.submit = function () {
         if (!a.submitWaiting) {
-            if (!/^1[3-9]\d{9}$/.test(a.phoneNumber))return void(a.errorMessage = "ÊÖ»úºÅ¸ñÊ½²»ÕıÈ·");
+            if (!/^1[3-9]\d{9}$/.test(a.phoneNumber))return void(a.errorMessage = "æ‰‹æœºå·æ ¼å¼ä¸æ­£ç¡®");
             a.submitWaiting = !0, a.grab(a.phoneNumber).then(null, angular.noop).then(function () {
                 a.submitWaiting = !1
             })
@@ -1092,9 +1092,9 @@ angular.module("meleme.filters", []).filter("split", [function () {
 }]), angular.module("meleme.controllers").controller("hongbaoResetCtrl", ["$scope", "SweetAlert", function (a, b) {
     a.current = a.getPhone(), a.submit = function () {
         if (!a.submitWaiting) {
-            if (!/^1[3-9]\d{9}$/.test(a.phoneNumber))return void(a.errorMessage = "ÊÖ»úºÅ¸ñÊ½²»ÕıÈ·");
+            if (!/^1[3-9]\d{9}$/.test(a.phoneNumber))return void(a.errorMessage = "æ‰‹æœºå·æ ¼å¼ä¸æ­£ç¡®");
             a.submitWaiting = !0, a.setPhone(a.phoneNumber).$promise.then(function () {
-                swal({type: "success", title: "ĞŞ¸Ä³É¹¦", text: "ÏÂ´ÎÇÀºì°ü½«Ê¹ÓÃĞÂÉèÖÃµÄÊÖ»úºÅ"}, function () {
+                swal({type: "success", title: "ä¿®æ”¹æˆåŠŸ", text: "ä¸‹æ¬¡æŠ¢çº¢åŒ…å°†ä½¿ç”¨æ–°è®¾ç½®çš„æ‰‹æœºå·"}, function () {
                     a["goto"]("SUCCESS"), a.$root.$apply()
                 })
             }).then(null, angular.noop).then(function () {
@@ -1105,7 +1105,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
 }]), angular.module("meleme.controllers").controller("hongbaoBaidaCtrl", ["$scope", "$location", "$q", "HongbaoBaida", "WechatInfo", function (a, b, c, d, e) {
     a.myHeight = document.documentElement.clientHeight + "px", a.logoSrc = a.STATICBASE + "/msite/img/hongbao/elogo.png";
     var f = b.search();
-    if (!/MicroMessenger/i.test(navigator.userAgent))return void(a.showFail = "ÇëÔÚÎ¢ĞÅä¯ÀÀÆ÷ÖĞ´ò¿ªÁ´½Ó");
+    if (!/MicroMessenger/i.test(navigator.userAgent))return void(a.showFail = "è¯·åœ¨å¾®ä¿¡æµè§ˆå™¨ä¸­æ‰“å¼€é“¾æ¥");
     var g = a.user = new e;
     a.$root.loading = !0, g.load().then(function () {
         return d.get({way: "group", sn: f.group_sn}, function (b) {
@@ -1134,28 +1134,28 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     var c = b.error.code;
                     switch (1 * c) {
                         case 20:
-                            swal("²Ù×÷Ì«Æµ·±ÁË");
+                            swal("æ“ä½œå¤ªé¢‘ç¹äº†");
                             break;
                         case 21:
-                            swal({title: "ÎŞĞ§µÄÎ¢ĞÅID", confirmButtonText: "ÖØĞÂÊÚÈ¨"}, function (a) {
+                            swal({title: "æ— æ•ˆçš„å¾®ä¿¡ID", confirmButtonText: "é‡æ–°æˆæƒ"}, function (a) {
                                 g.authorize()
                             });
                             break;
                         case 23:
-                            swal("È±ÉÙ±ØÒªĞÅÏ¢");
+                            swal("ç¼ºå°‘å¿…è¦ä¿¡æ¯");
                             break;
                         case 40:
-                            a.errorMessage = "¶şÎ¬ÂëÒÑÊ§Ğ§", a.showResult = !0;
+                            a.errorMessage = "äºŒç»´ç å·²å¤±æ•ˆ", a.showResult = !0;
                             break;
                         default:
-                            swal("³ö´íÁË")
+                            swal("å‡ºé”™äº†")
                     }
                 }
             })
         }
     })
 }]), angular.module("meleme.controllers").controller("loginCtrl", ["$rootScope", "$scope", "$location", "Account", "ProfileUser", "Captcha", function (a, b, c, d, e, f) {
-    a.isFromApp && (a.Page.title = "µÇÂ¼"), b.user = {}, b.user.username = localStorage.getItem("lastname");
+    a.isFromApp && (a.Page.title = "ç™»å½•"), b.user = {}, b.user.username = localStorage.getItem("lastname");
     var g = function () {
         var b = "http://" + a.MOBILEHOST + "/home", d = c.search().redirect || b;
         d = decodeURIComponent(d), location.href = d
@@ -1166,7 +1166,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         })
     }, b.refreshCode();
     var h = angular.copy(a.wechatData, {});
-    h.title = "µÇÂ¼" + h.title, wechat("timeline", h).on("friend", h), a.loading = !0, b.profile.$promise.then(function () {
+    h.title = "ç™»å½•" + h.title, wechat("timeline", h).on("friend", h), a.loading = !0, b.profile.$promise.then(function () {
         g()
     }, function () {
         a.loading = !1
@@ -1192,10 +1192,10 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }, function (a) {
             switch (b.error = a.data, a.data.name) {
                 case"VALIDATION_FAILED":
-                    b.error.message = "ÇëÌîĞ´ÊÖ»úºÅÂë";
+                    b.error.message = "è¯·å¡«å†™æ‰‹æœºå·ç ";
                     break;
                 default:
-                    b.error.message = "·şÎñÆ÷ºÃÏñÓĞÎÊÌâÀ²"
+                    b.error.message = "æœåŠ¡å™¨å¥½åƒæœ‰é—®é¢˜å•¦"
             }
         })
     }, b.loginPrepare = function () {
@@ -1256,7 +1256,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
     }, i = function () {
         d.get({orderId: b.id, method: "paying"}, {}, function (d) {
             return "error" === d.status ? void(84 === d.error.code ? c.url("pay?id=" + b.id + "&status=start") : swal({
-                title: "³ö´íÀ²",
+                title: "å‡ºé”™å•¦",
                 text: d.error.msg,
                 type: "error"
             }, function () {
@@ -1266,7 +1266,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
     };
     "paying" === b.status ? i() : (a.payStart = !0, d.get({orderId: b.id, method: "online"}, {}, function (d) {
         if ("error" === d.status)return void(82 === d.error.code ? c.url("pay?id=" + b.id + "&status=paying") : swal({
-            title: "³ö´íÀ²",
+            title: "å‡ºé”™å•¦",
             text: d.error.msg,
             type: "error"
         }, function () {
@@ -1285,7 +1285,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
             hongbao_sn: a.hongBao.method.sn || "",
             password: a.balancePW || ""
         }), function (d) {
-            return "error" === d.status ? void swal({title: "³ö´íÀ²", text: d.error.msg, type: "warning"}, function () {
+            return "error" === d.status ? void swal({title: "å‡ºé”™å•¦", text: d.error.msg, type: "warning"}, function () {
                 c.url("/trade/" + b.id), a.$root.$apply()
             }) : null === a.payMethod.index ? c.url("/trade/" + b.id) : void(window.location = d.data.redirectURL)
         })
@@ -1324,21 +1324,21 @@ angular.module("meleme.filters", []).filter("split", [function () {
         return !angular.isUndefined(b.profile.is_mobile_valid)
     }, a.widthdraw = function () {
         b.profile.is_mobile_valid ? c.url("/profile/withdraw") : g.swal({
-            title: "°ó¶¨ÊÖ»ú",
-            text: "Óà¶îÌáÏÖĞè°ó¶¨ÊÖ»ú",
-            confirmButtonText: "Á¢¼´°ó¶¨",
+            title: "ç»‘å®šæ‰‹æœº",
+            text: "ä½™é¢æç°éœ€ç»‘å®šæ‰‹æœº",
+            confirmButtonText: "ç«‹å³ç»‘å®š",
             showCancelButton: !0,
-            cancelButtonText: "È¡Ïû"
+            cancelButtonText: "å–æ¶ˆ"
         }, function () {
             c.url("/profile/bind")
         })
     }, a.recharge = function () {
         b.profile.is_mobile_valid ? c.url("/profile/recharge") : g.swal({
-            title: "°ó¶¨ÊÖ»ú",
-            text: "³äÖµĞè°ó¶¨ÊÖ»ú",
-            confirmButtonText: "Á¢¼´°ó¶¨",
+            title: "ç»‘å®šæ‰‹æœº",
+            text: "å……å€¼éœ€ç»‘å®šæ‰‹æœº",
+            confirmButtonText: "ç«‹å³ç»‘å®š",
             showCancelButton: !0,
-            cancelButtonText: "È¡Ïû"
+            cancelButtonText: "å–æ¶ˆ"
         }, function () {
             c.url("/profile/bind")
         })
@@ -1369,10 +1369,10 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }, function (a) {
             switch (b.error = a.data, a.data.name) {
                 case"VALIDATION_FAILED":
-                    b.error.message = "ÇëÌîĞ´ÊÖ»úºÅÂë";
+                    b.error.message = "è¯·å¡«å†™æ‰‹æœºå·ç ";
                     break;
                 default:
-                    b.error.message = "·şÎñÆ÷ºÃÏñÓĞÎÊÌâÀ²"
+                    b.error.message = "æœåŠ¡å™¨å¥½åƒæœ‰é—®é¢˜å•¦"
             }
         })
     }, a.profile.$promise.then(function (a) {
@@ -1409,9 +1409,9 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }
     }
 }]), angular.module("meleme.controllers").controller("profileExplainCtrl", ["$scope", "$routeParams", "UserAgent", "Page", function (a, b, c, d) {
-    a.isFromApp && ("balance" === b.page ? d.title = "Óà¶îËµÃ÷" : "hongbao" === b.page ? d.title = "ºì°üËµÃ÷" : "pointtext" === b.page ? d.title = "»ı·ÖËµÃ÷" : "member" === b.page && (d.title = "»áÔ±ËµÃ÷")), a.pageUrl = "/msite/html/profile_explain_" + b.page + ".html"
+    a.isFromApp && ("balance" === b.page ? d.title = "ä½™é¢è¯´æ˜" : "hongbao" === b.page ? d.title = "çº¢åŒ…è¯´æ˜" : "pointtext" === b.page ? d.title = "ç§¯åˆ†è¯´æ˜" : "member" === b.page && (d.title = "ä¼šå‘˜è¯´æ˜")), a.pageUrl = "/msite/html/profile_explain_" + b.page + ".html"
 }]), angular.module("meleme.controllers").controller("profileGiftCtrl", ["$scope", "$rootScope", "$location", "UsersGift", "$timeout", function (a, b, c, d, e) {
-    b.isFromApp && (b.Page.title = "¶Ò»»¼ÇÂ¼"), a.giftRecords = [], a.hasRecord = !0, a.isrecordLoading = !1, b.loading = !0, a.hasMoreData = !0;
+    b.isFromApp && (b.Page.title = "å…‘æ¢è®°å½•"), a.giftRecords = [], a.hasRecord = !0, a.isrecordLoading = !1, b.loading = !0, a.hasMoreData = !0;
     var f = 0;
     a.recordLoadMore = function () {
         !a.isrecordLoading && a.hasMoreData && (a.giftRecords.length > 0 && (a.isrecordLoading = !0), b.profile.$promise.then(function (c) {
@@ -1437,13 +1437,13 @@ angular.module("meleme.filters", []).filter("split", [function () {
         })
     })
 }]), angular.module("meleme.controllers").controller("profileHongbaoExchangeCtrl", ["$scope", "$rootScope", "$location", "Page", "ProfileHongbao", function (a, b, c, d, e) {
-    a.isFromApp && (d.title = "¶Ò»»ºì°ü"), a.backHongbaoPage = function () {
+    a.isFromApp && (d.title = "å…‘æ¢çº¢åŒ…"), a.backHongbaoPage = function () {
         location.href = a.isFromApp ? "eleme://page_back?name=my_gift_page" : "/profile/hongbao"
     }, a.exchange = function () {
         a.searching = !0, e.exchange({userid: b.profile.user_id}, {exchange_code: a.exchange_code}, function () {
             a.searching = !1, a.exchangeSuccess = !0
         }, function (b) {
-            a.searching = !1, "INVALID_HONGBAO_EXCHANGER" === b.data.name ? a.error = {msg: "¶Ò»»ÂëÊäÈë´íÎó"} : "INVALID_EXCHANGE_FREQUENCY" === b.data.name ? a.error = {msg: "¶Ò»»µÃ¹ıÓÚÆµ·±£¬ÇëÃ÷ÌìÔÙÊÔ°É"} : a.error = {msg: b.data.message}
+            a.searching = !1, "INVALID_HONGBAO_EXCHANGER" === b.data.name ? a.error = {msg: "å…‘æ¢ç è¾“å…¥é”™è¯¯"} : "INVALID_EXCHANGE_FREQUENCY" === b.data.name ? a.error = {msg: "å…‘æ¢å¾—è¿‡äºé¢‘ç¹ï¼Œè¯·æ˜å¤©å†è¯•å§"} : a.error = {msg: b.data.message}
         })
     }
 }]), angular.module("meleme.controllers").controller("profileInfoCtrl", ["$rootScope", "$scope", "$location", "ProfileUser", function (a, b, c, d) {
@@ -1455,18 +1455,18 @@ angular.module("meleme.filters", []).filter("split", [function () {
         return b.user.is_auto_generated.password ? c.url("/profile/setpw") : 1 === b.user.is_mobile_valid ? c.url("/profile/changepw/mobile") : void c.url("/profile/changepw/old")
     }
 }]), angular.module("meleme.controllers").controller("profileMemberChargeCtrl", ["$scope", "$rootScope", "$location", "Page", "SweetAlert", "ParamRoute", "VIP", "Captcha", function (a, b, c, d, e, f, g, h) {
-    d.title = "Æ·ÅÆ¹İ»áÔ±°ó¶¨", a.user = {}, a.refreshCode = function () {
+    d.title = "å“ç‰Œé¦†ä¼šå‘˜ç»‘å®š", a.user = {}, a.refreshCode = function () {
         h.save(function (c) {
             a.captcha = b.RESTBASE + "/captchas/" + c.code
         })
     }, a.refreshCode(), a.charge = function () {
         e.swal({
-            title: "È·ÈÏ³äÖµ£¿",
-            text: "È·ÈÏÎªÊÖ»úºÅ" + a.user.mobile,
+            title: "ç¡®è®¤å……å€¼ï¼Ÿ",
+            text: "ç¡®è®¤ä¸ºæ‰‹æœºå·" + a.user.mobile,
             showCancelButton: !0,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: "È·ÈÏ",
-            cancelButtonText: "È¡Ïû",
+            confirmButtonText: "ç¡®è®¤",
+            cancelButtonText: "å–æ¶ˆ",
             closeOnConfirm: !0,
             closeOnCancel: !0
         }, function (b) {
@@ -1483,16 +1483,16 @@ angular.module("meleme.filters", []).filter("split", [function () {
         })
     }
 }]), angular.module("meleme.controllers").controller("profileMemberQueryCtrl", ["$scope", "$location", "Page", "VIP", "VerifyCode", function (a, b, c, d, e) {
-    c.title = "²éÑ¯»áÔ±ÓĞĞ§ÆÚ", a.sendCode = function (b) {
+    c.title = "æŸ¥è¯¢ä¼šå‘˜æœ‰æ•ˆæœŸ", a.sendCode = function (b) {
         a.user.code = "", e.save({way: "mobile", action: "send"}, {mobile: a.user.mobile, type: b}, function (c) {
             a.user.serverError = !1, a.user.validate_token = c.validate_token, "sms" === b ? a.countdown = !0 : a.user.audio = !0
         }, function (b) {
             switch (a.user.serverError = !0, b.data.name) {
                 case"VALIDATION_FAILED":
-                    a.user.errorMsg = "ÇëÌîĞ´ÊÖ»úºÅÂë";
+                    a.user.errorMsg = "è¯·å¡«å†™æ‰‹æœºå·ç ";
                     break;
                 default:
-                    a.user.errorMsg = "·şÎñÆ÷ºÃÏñÓĞÎÊÌâÀ²"
+                    a.user.errorMsg = "æœåŠ¡å™¨å¥½åƒæœ‰é—®é¢˜å•¦"
             }
         })
     };
@@ -1515,12 +1515,12 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     end: f(Date.parse(b.valid_end))
                 }, c.valueOf() < d ? a.queryResult = "outOfDate" : a.queryResult = "isVIP"
             }, function (b) {
-                404 === b.status ? (a.user.errorMsg = !1, a.showSuccesssend = !0, a.queryResult = "notVIP") : a.user.errorMsg = "·şÎñÆ÷ºÃÏñÓĞÎÊÌâÀ²"
-            }) : (a.user.serverError = !0, a.user.errorMsg = "ÑéÖ¤Âë´íÎó", a.countdown = !1)
+                404 === b.status ? (a.user.errorMsg = !1, a.showSuccesssend = !0, a.queryResult = "notVIP") : a.user.errorMsg = "æœåŠ¡å™¨å¥½åƒæœ‰é—®é¢˜å•¦"
+            }) : (a.user.serverError = !0, a.user.errorMsg = "éªŒè¯ç é”™è¯¯", a.countdown = !1)
         })
     }
 }]), angular.module("meleme.controllers").controller("profileMemberCtrl", ["$scope", "$rootScope", "$location", "$route", "Page", "ParamRoute", "ProfileUser", function (a, b, c, d, e, f, g) {
-    e.title = "Æ·ÅÆ¹İ»áÔ±", a.showVIPInfo = !1;
+    e.title = "å“ç‰Œé¦†ä¼šå‘˜", a.showVIPInfo = !1;
     var h = function (a) {
         return a.getFullYear() + "-" + (a.getMonth() + 1) + "-" + a.getDate()
     };
@@ -1541,7 +1541,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         window.location = "https://" + a.MOBILEHOST + "/login" + b
     }
 }]), angular.module("meleme.controllers").controller("profilePointsCtrl", ["$scope", "$rootScope", "UsersRecord", "UserAgent", "ORDERTEXT", function (a, b, c, d, e) {
-    b.isFromApp && (b.Page.title = "ÎÒµÄ»ı·Ö"), a.point = function () {
+    b.isFromApp && (b.Page.title = "æˆ‘çš„ç§¯åˆ†"), a.point = function () {
         return b.profile.point
     }, a.pointRecords = [];
     var f = function (b) {
@@ -1564,13 +1564,13 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }))
     }
 }]), angular.module("meleme.controllers").controller("profileRechargeCtrl", ["$scope", "$location", "UserAgent", "Balance", "Page", function (a, b, c, d, e) {
-    if (a.moneys = [{val: 50, text: "50.00Ôª"}, {val: 100, text: "100.00Ôª"}, {val: 200, text: "200.00Ôª"}, {
+    if (a.moneys = [{val: 50, text: "50.00å…ƒ"}, {val: 100, text: "100.00å…ƒ"}, {val: 200, text: "200.00å…ƒ"}, {
             val: 300,
-            text: "300.00Ôª"
-        }, {val: 500, text: "500.00Ôª"}], a.money = 50, a.selectPayWay = function (b) {
+            text: "300.00å…ƒ"
+        }, {val: 500, text: "500.00å…ƒ"}], a.money = 50, a.selectPayWay = function (b) {
             a.payway = b
         }, a.isFromApp) {
-        e.title = "³äÖµ", a.payway = 3, a.hasmore = !0, a.selectMore = function () {
+        e.title = "å……å€¼", a.payway = 3, a.hasmore = !0, a.selectMore = function () {
             a.hasmore = !a.hasmore
         };
         var f = angular.element();
@@ -1589,7 +1589,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
     };
     1 === parseFloat(b.search().isSuccess) && (a.showSuccesssend = !0, a.money = b.search().amount)
 }]), angular.module("meleme.controllers").controller("profileServiceCtrl", ["$scope", "$location", "UserAgent", "Page", function (a, b, c, d) {
-    d.title = "·şÎñÖĞĞÄ";
+    d.title = "æœåŠ¡ä¸­å¿ƒ";
     var e = encodeURIComponent("https://v2.live800.com/live800/chatClient/chatbox.jsp?companyID=402791&configID=123801&jid=1820947377&enterurl=http%3A%2F%2Fprofile%2Elive800%2Ecom%2Fprofile%2Fpreview%2Ejsp&skillId=6632&pagetitle=%E6%95%88%E6%9E%9C%E9%A2%84%E8%A7%88&pagereferrer=http%3A%2F%2Fprofile%2Elive800%2Ecom%2Fprofile%2FgetNewEmbedScriptEmbedScriptAction%2Eaction%3Ficon%3Dselected7&firstEnterUrl=http%3A%2F%2Fprofile%2Elive800%2Ecom%2Fprofile%2Fpreview%2Ejsp&lan=zh&s=1");
     switch (c) {
         case"ios":
@@ -1630,11 +1630,11 @@ angular.module("meleme.filters", []).filter("split", [function () {
         c > 24 || 5 > c ? b.invalidusername.errorlen = !0 : (b.invalidusername.allnum = !/[^0-9]/.test(a), b.invalidusername.errorcode = /[^\-\.\w\u4e00-\u9fa5]/.test(a))
     }
 }]), angular.module("meleme.controllers").controller("profileWithdrawCtrl", ["$scope", "$rootScope", "UserAgent", "Balance", "ProfileUser", "$location", "SweetAlert", "Page", function (a, b, c, d, e, f, g, h) {
-    a.infoErrorMsg = "ÊäÈë½ğ¶î´íÎó", a.isFromApp && (h.title = "Óà¶îÌáÏÖ"), d.checkWithdraw({}, function (b) {
+    a.infoErrorMsg = "è¾“å…¥é‡‘é¢é”™è¯¯", a.isFromApp && (h.title = "ä½™é¢æç°"), d.checkWithdraw({}, function (b) {
         a.is_withdraw_valid = b.is_withdraw_valid, a.is_withdraw_valid || g.swal({
-            title: "ÎŞ·¨ÌáÏÖ",
-            text: "Ã¿ÈÕÖ»ÌáÏÖÒ»´Î",
-            confirmButtonText: "ÖªµÀÁË"
+            title: "æ— æ³•æç°",
+            text: "æ¯æ—¥åªæç°ä¸€æ¬¡",
+            confirmButtonText: "çŸ¥é“äº†"
         }, function () {
             a.isFromApp ? location.href = "eleme://page_back?name=my_balance_page" : f.url("/profile/balance")
         })
@@ -1674,7 +1674,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         a = a ? "?redirect=" + encodeURIComponent(a) : "", window.location = "https://" + b.MOBILEHOST + "/login" + a
     };
     var j = angular.copy(a.wechatData, {});
-    j.title = "×¢²á" + j.title, wechat("timeline", j).on("friend", j), b.user = {
+    j.title = "æ³¨å†Œ" + j.title, wechat("timeline", j).on("friend", j), b.user = {
         mobile: "",
         password: "",
         code: ""
@@ -1684,10 +1684,10 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }, function (a) {
             switch (b.error = a.data, a.data.name) {
                 case"VALIDATION_FAILED":
-                    b.error.message = "ÇëÌîĞ´ÊÖ»úºÅÂë";
+                    b.error.message = "è¯·å¡«å†™æ‰‹æœºå·ç ";
                     break;
                 default:
-                    b.error.message = "·şÎñÆ÷ºÃÏñÓĞÎÊÌâÀ²"
+                    b.error.message = "æœåŠ¡å™¨å¥½åƒæœ‰é—®é¢˜å•¦"
             }
         })
     }, b.register = function () {
@@ -1704,7 +1704,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
             type: "mobile",
             mobile: b.user.mobile
         }, function (a) {
-            a.is_exists && (b.error = {}, b.error.message = "ÓÃ»§ÒÑ´æÔÚ, ¿ÉÒÔÖ±½ÓµÇÂ¼")
+            a.is_exists && (b.error = {}, b.error.message = "ç”¨æˆ·å·²å­˜åœ¨, å¯ä»¥ç›´æ¥ç™»å½•")
         })
     }, b.message = function (a) {
         b["invalid" + a] = b.regform[a].$invalid
@@ -1771,7 +1771,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         if (!c.error) {
             a.restaurant = c;
             var d = angular.copy(b.wechatData, {});
-            d.desc = c.name + (c.rating ? " / ÆÀ¼Û " + c.rating + " ĞÇ" : "") + (c.deliver_time ? " / " + c.deliver_time + "·ÖÖÓËÍ´ï¡£" : ""), d.img = c.image_path ? a.FUSSBASE + c.image_path + "?w=100&h=100" : d.img, wechat("timeline", d).on("friend", d)
+            d.desc = c.name + (c.rating ? " / è¯„ä»· " + c.rating + " æ˜Ÿ" : "") + (c.deliver_time ? " / " + c.deliver_time + "åˆ†é’Ÿé€è¾¾ã€‚" : ""), d.img = c.image_path ? a.FUSSBASE + c.image_path + "?w=100&h=100" : d.img, wechat("timeline", d).on("friend", d)
         }
     })["finally"](function () {
         b.loading = !1
@@ -1834,28 +1834,28 @@ angular.module("meleme.filters", []).filter("split", [function () {
                     a.bodyWhite = 1
                 }, 0), window.ga("send", "pageview", (e ? "restaurant" : "page") + "*" + d.path())), j.test(d.url()) && (b = !0), b && a.profile.$promise["finally"](function () {
                     a.profile.user_id || i.swal({
-                        title: "ÇëÏÈµÇÂ¼ÄúµÄÕËºÅ",
+                        title: "è¯·å…ˆç™»å½•æ‚¨çš„è´¦å·",
                         type: "warning",
                         showCancelButton: !0,
-                        confirmButtonText: "µÇÂ¼",
-                        cancelButtonText: "È¡Ïû"
+                        confirmButtonText: "ç™»å½•",
+                        cancelButtonText: "å–æ¶ˆ"
                     }, function (a) {
                         d.url(a ? "/login" : "/home")
                     })
                 })
             }), a.trackId = document.cookie.match(/(?:^|; )track_id=(.*?)(?:; |$)|$/)[1], a.logout = function () {
                 i.swal({
-                    title: "ÊÇ·ñÍË³öµÇÂ¼",
+                    title: "æ˜¯å¦é€€å‡ºç™»å½•",
                     type: "warning",
                     showCancelButton: !0,
                     confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "ÍË³öµÇÂ¼",
-                    cancelButtonText: "ÔÙµÈµÈ"
+                    confirmButtonText: "é€€å‡ºç™»å½•",
+                    cancelButtonText: "å†ç­‰ç­‰"
                 }, function (b) {
                     b && h.save({action: "logout"}, angular.$().param(a.profile), function (b) {
-                        return b.error ? swal("³ö´íÀ²", "ÍË³öµÇÂ¼Ê§°Ü :(", "warning") : (a.profile = f.get(), void d.url("/profile"))
+                        return b.error ? swal("å‡ºé”™å•¦", "é€€å‡ºç™»å½•å¤±è´¥ :(", "warning") : (a.profile = f.get(), void d.url("/profile"))
                     }, function () {
-                        swal("³ö´íÀ²", "ÍË³öµÇÂ¼Ê§°Ü,ÇëÖØĞÂ³¢ÊÔ", "warning")
+                        swal("å‡ºé”™å•¦", "é€€å‡ºç™»å½•å¤±è´¥,è¯·é‡æ–°å°è¯•", "warning")
                     })
                 })
             }, a.wechatData = {
@@ -1864,8 +1864,8 @@ angular.module("meleme.filters", []).filter("split", [function () {
                 link: function () {
                     return d.absUrl()
                 },
-                title: "¶öÁËÃ´",
-                desc: "ÖĞ¹ú×î×¨ÒµµÄÍøÉÏ¶©²ÍÆ½Ì¨£¬Ìá¹©¸÷ÀàÖĞÊ½¡¢ÈÕÊ½¡¢º«Ê½¡¢Î÷Ê½µÈÓÅÖÊÃÀÊ³¡£"
+                title: "é¥¿äº†ä¹ˆ",
+                desc: "ä¸­å›½æœ€ä¸“ä¸šçš„ç½‘ä¸Šè®¢é¤å¹³å°ï¼Œæä¾›å„ç±»ä¸­å¼ã€æ—¥å¼ã€éŸ©å¼ã€è¥¿å¼ç­‰ä¼˜è´¨ç¾é£Ÿã€‚"
             }, wechat("timeline", a.wechatData).on("friend", a.wechatData), localStorage.getItem("geo")) {
             var k = localStorage.getItem("geo"), l = k.replace(/(\/place\/|&premium=\d)/g, "");
             localStorage.setItem("geo", l), localStorage.setItem("geohash", l)
@@ -1881,7 +1881,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         var k = function (c) {
             if (c.error)return a.status = -1;
             var e = c.data, g = angular.copy(b.wechatData, {});
-            g.title = "¶öÁËÃ´Î¢ĞÅÆ´µ¥", g.link = window.location.href.replace(/code=[^&]+&?/, ""), g.desc = "ÎÒÕıÔÚ¡¸" + e.restaurantName + "¡¹²ÎÓëÆ´µ¥¡£", g.img = e.image_path ? a.FUSSBASE + e.image_path + "?w=100&h=100" : g.img, wechat("timeline", g).on("friend", g), wechat("showOptionMenu"), a.status = f(c.data), d.title = e.restaurantName, a.spellRestaurant = e, a.total = e.total;
+            g.title = "é¥¿äº†ä¹ˆå¾®ä¿¡æ‹¼å•", g.link = window.location.href.replace(/code=[^&]+&?/, ""), g.desc = "æˆ‘æ­£åœ¨ã€Œ" + e.restaurantName + "ã€å‚ä¸æ‹¼å•ã€‚", g.img = e.image_path ? a.FUSSBASE + e.image_path + "?w=100&h=100" : g.img, wechat("timeline", g).on("friend", g), wechat("showOptionMenu"), a.status = f(c.data), d.title = e.restaurantName, a.spellRestaurant = e, a.total = e.total;
             var h = 0, j = e.groups.length, k = 0;
             for (e.groups.reverse(); j > k; k++) {
                 var l = j - k - 1;
@@ -1892,7 +1892,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
                 } catch (n) {
                     m = localStorage.getItem("spellCartName")
                 }
-                m === e.groups[k].name && (a.me = e.groups[k].name), 0 === k || "·¢ÆğÈË" !== e.pindanMap[l].name || (e.groups.unshift(e.groups[k]), e.groups.splice(k + 1, 1))
+                m === e.groups[k].name && (a.me = e.groups[k].name), 0 === k || "å‘èµ·äºº" !== e.pindanMap[l].name || (e.groups.unshift(e.groups[k]), e.groups.splice(k + 1, 1))
             }
             for (; k >= 0; k--)void 0 !== e.groups[k] && (e.groups[k].listColor = i[(j - k - 1) % 7]);
             if (a.spellRestaurant.personNum = j, a.spellRestaurant.foodNum = h, a.isListExist = e.groups.length, a.spellRestaurant.pindanNum = e.pindanCount ? Math.max(e.pindanCount, 0) : 0, b.spell.data = a.spellRestaurant, e.pindanOrder) {
@@ -1907,8 +1907,8 @@ angular.module("meleme.filters", []).filter("split", [function () {
                 }), localStorage.setItem("cartList", JSON.stringify(g.list)), e) {
                 var h = 1, i = 0, j = function (a) {
                     return a.error ? i = i || 1 : (i && swal({
-                        title: "³ö´íÀ²",
-                        text: "ÍøÂç´íÎó",
+                        title: "å‡ºé”™å•¦",
+                        text: "ç½‘ç»œé”™è¯¯",
                         type: "warning"
                     }, function () {
                         return b.loading = 0, c.url("/cart?spell=1&cartId=" + b.spell.cartId + "&sig=" + b.spell.sig)
@@ -1922,7 +1922,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         };
         var l = Date.now(), m = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2a416286e96100ed&redirect_uri=" + encodeURIComponent(c.absUrl()) + "&response_type=code&scope=snsapi_userinfo&state=" + l, n = localStorage.getItem("wechatData"), o = localStorage.getItem("timeState");
         if (j.code && 0 === a.status) {
-            if (!o || j.state !== o || 32 !== j.code.length)return swal("³ö´íÀ²", "ĞÅÏ¢ÑéÖ¤Ê§°Ü", "warning");
+            if (!o || j.state !== o || 32 !== j.code.length)return swal("å‡ºé”™å•¦", "ä¿¡æ¯éªŒè¯å¤±è´¥", "warning");
             localStorage.removeItem("timeState"), h.get({code: j.code}, function (a) {
                 a.data && localStorage.setItem("wechatData", JSON.stringify(a.data))
             })
@@ -1934,8 +1934,8 @@ angular.module("meleme.filters", []).filter("split", [function () {
             } catch (c) {
                 b = localStorage.getItem("spellCartName")
             }
-            confirm("È·ÈÏÍË³öÆ´µ¥Âğ£¿") && e.save({cartId: j.cartId, sig: j.sig, action: "delete", name: b}, function (b) {
-                return b.error ? swal("³ö´íÀ²", "ÍË³ö´íÎó£¡", "warning") : (k(b), a.status = 0, localStorage.removeItem("spellCartId"), void localStorage.removeItem("spellCartName"))
+            confirm("ç¡®è®¤é€€å‡ºæ‹¼å•å—ï¼Ÿ") && e.save({cartId: j.cartId, sig: j.sig, action: "delete", name: b}, function (b) {
+                return b.error ? swal("å‡ºé”™å•¦", "é€€å‡ºé”™è¯¯ï¼", "warning") : (k(b), a.status = 0, localStorage.removeItem("spellCartId"), void localStorage.removeItem("spellCartName"))
             })
         };
         var p = function () {
@@ -1944,7 +1944,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         p()
     } else a.spellRestaurant = {restaurantNameForUrl: "spell", personNum: 0, foodNum: 0}
 }]), angular.module("meleme.controllers").controller("tradeCancelOrderCtrl", ["$scope", "$routeParams", "$location", "Order", function (a, b, c, d) {
-    a.orderId = b.id, a.reasons = ["ÁÙÊ±ÓĞÊÂ£¬ÎŞ·¨½ÓÊÕÍâÂô", "µã´íÁË£¬ÖØĞÂµã", "²»ÏëÂòÁË", "ÆäËû"], a.setReason = function (b) {
+    a.orderId = b.id, a.reasons = ["ä¸´æ—¶æœ‰äº‹ï¼Œæ— æ³•æ¥æ”¶å¤–å–", "ç‚¹é”™äº†ï¼Œé‡æ–°ç‚¹", "ä¸æƒ³ä¹°äº†", "å…¶ä»–"], a.setReason = function (b) {
         a.reasonIndex = b
     }, a.submitOrderReason = function () {
         var b;
@@ -1984,27 +1984,27 @@ angular.module("meleme.filters", []).filter("split", [function () {
         b.order.can_pay = !1
     }), b.payRepeatCheck = function () {
         d.url("/pay?id=" + c.id + "&status=paying")
-    }, b.options = ["²ÍÌüÒÑÈ·ÈÏ£¬µ«Ã»ÓĞËÍÍâÂô", "²ÍÌü²Î¼ÓÁË»î¶¯£¬µ«Ã»ÓĞÓÅ»İ", "ÍÂ²ÛÆäËû"], b.itemToggle = function (a) {
+    }, b.options = ["é¤å…å·²ç¡®è®¤ï¼Œä½†æ²¡æœ‰é€å¤–å–", "é¤å…å‚åŠ äº†æ´»åŠ¨ï¼Œä½†æ²¡æœ‰ä¼˜æƒ ", "åæ§½å…¶ä»–"], b.itemToggle = function (a) {
         b.errorStatus = !1, b.itemIndex = a
     }, b.cancelOrder = function () {
         11 !== b.order.status_code ? j.swal({
-            title: "ÊÇ·ñÈ¡Ïû¶©µ¥",
+            title: "æ˜¯å¦å–æ¶ˆè®¢å•",
             type: "warning",
             showCancelButton: !0,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: "È¡Ïû¶©µ¥",
-            cancelButtonText: "ÔÙµÈµÈ"
+            confirmButtonText: "å–æ¶ˆè®¢å•",
+            cancelButtonText: "å†ç­‰ç­‰"
         }, function (a) {
             a && f.cancel({id: b.order.unique_id}, {}, function () {
                 d.url("/cancel_order/" + b.order.unique_id)
             })
         }) : j.swal({
-            title: "²ÍÌü¸Õ¸Õ½ÓÁËµ¥",
-            text: "ÎŞ·¨È¡Ïû£¬Äú¿ÉÒÔµç»°²ÍÌüÈ¡Ïû",
+            title: "é¤å…åˆšåˆšæ¥äº†å•",
+            text: "æ— æ³•å–æ¶ˆï¼Œæ‚¨å¯ä»¥ç”µè¯é¤å…å–æ¶ˆ",
             type: "warning",
             showCancelButton: !0,
-            confirmButtonText: "µç»°È¡Ïû",
-            cancelButtonText: "ÔÙµÈµÈ"
+            confirmButtonText: "ç”µè¯å–æ¶ˆ",
+            cancelButtonText: "å†ç­‰ç­‰"
         }, function (a) {
             a && window.open("tel:18652171158")
         })
@@ -2016,13 +2016,13 @@ angular.module("meleme.filters", []).filter("split", [function () {
             content: 2 === b.itemIndex ? b.mockText : ""
         }, function () {
             j.swal({
-                title: "·´À¡³É¹¦",
-                text: "¸ĞĞ»Äú¶ÔÎÒÃÇµÄÖ§³ÖºÍ°ïÖú£¬ÎÒÃÇ»á¾¡¿ìºËÊµ£¬ºËÊµÎŞÎóºó£¬»á¶Ô²ÍÌü½øĞĞ³Í·£",
+                title: "åé¦ˆæˆåŠŸ",
+                text: "æ„Ÿè°¢æ‚¨å¯¹æˆ‘ä»¬çš„æ”¯æŒå’Œå¸®åŠ©ï¼Œæˆ‘ä»¬ä¼šå°½å¿«æ ¸å®ï¼Œæ ¸å®æ— è¯¯åï¼Œä¼šå¯¹é¤å…è¿›è¡Œæƒ©ç½š",
                 customClass: "complaint-service-box",
-                confirmButtonText: "ÖªµÀÁË"
+                confirmButtonText: "çŸ¥é“äº†"
             }), b.order.complaint_status = 1, b.showReport = !1
         }, function (a) {
-            j.swal({title: "³ö´íÀ²", text: a.data.message, confirmButtonText: "ÖªµÀÁË"}), b.showReport = !1
+            j.swal({title: "å‡ºé”™å•¦", text: a.data.message, confirmButtonText: "çŸ¥é“äº†"}), b.showReport = !1
         })
     };
     var l = encodeURIComponent("https://v2.live800.com/live800/chatClient/chatbox.jsp?companyID=402791&configID=123801&jid=1820947377&enterurl=http%3A%2F%2Fprofile%2Elive800%2Ecom%2Fprofile%2Fpreview%2Ejsp&skillId=6632&pagetitle=%E6%95%88%E6%9E%9C%E9%A2%84%E8%A7%88&pagereferrer=http%3A%2F%2Fprofile%2Elive800%2Ecom%2Fprofile%2FgetNewEmbedScriptEmbedScriptAction%2Eaction%3Ficon%3Dselected7&firstEnterUrl=http%3A%2F%2Fprofile%2Elive800%2Ecom%2Fprofile%2Fpreview%2Ejsp&lan=zh&s=1");
@@ -2038,10 +2038,10 @@ angular.module("meleme.filters", []).filter("split", [function () {
     }
     b.orderComplaintService = function () {
         j.swal({
-            title: "ÁªÏµ¿Í·ş",
-            text: '<a href="' + b.urlOnline + '">ÔÚÏß¿Í·ş</a><a href="' + b.urlPhone + '">¿Í·şµç»°£º10105757</a>',
+            title: "è”ç³»å®¢æœ",
+            text: '<a href="' + b.urlOnline + '">åœ¨çº¿å®¢æœ</a><a href="' + b.urlPhone + '">å®¢æœç”µè¯ï¼š10105757</a>',
             customClass: "complaint-service-box",
-            confirmButtonText: "È¡Ïû",
+            confirmButtonText: "å–æ¶ˆ",
             confirmButtonColor: "#3190E8",
             html: !0
         })
@@ -2069,7 +2069,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }))
     }
 }]), angular.module("meleme.controllers").controller("unbindMobileCtrl", ["$scope", "Page", "Mobile", "$rootScope", "VerifyCode", "UserAgent", "$location", function (a, b, c, d, e, f, g) {
-    a.isFromApp && (b.title = "»»°óÊÖ»ú"), d.profile.$promise.then(function () {
+    a.isFromApp && (b.title = "æ¢ç»‘æ‰‹æœº"), d.profile.$promise.then(function () {
         return 0 === d.profile.is_mobile_valid ? g.url("/profile/bind") : void(a.user = {
             origin: d.profile.mobile,
             code: "",
@@ -2080,9 +2080,9 @@ angular.module("meleme.filters", []).filter("split", [function () {
             validate_token: a.user.validate_token,
             validate_code: b.code
         }, function (b) {
-            d.profile.user_mobile_token = b.mobile_token, a.user.mobile_token = b.mobile_token, a.countdown = !1, a.user.serverError = !b.validate, b.validate ? g.url("/profile/bind") : a.user.errorMsg = "ÑéÖ¤Âë´íÎó"
+            d.profile.user_mobile_token = b.mobile_token, a.user.mobile_token = b.mobile_token, a.countdown = !1, a.user.serverError = !b.validate, b.validate ? g.url("/profile/bind") : a.user.errorMsg = "éªŒè¯ç é”™è¯¯"
         }, function (b) {
-            a.user.serverError = !0, a.user.errorMsg = "ÑéÖ¤Âë´íÎó"
+            a.user.serverError = !0, a.user.errorMsg = "éªŒè¯ç é”™è¯¯"
         })
     }, a.sendCode = function (b) {
         e.save({way: "mobile", action: "send"}, {mobile: a.user.origin, type: b}, function (c) {
@@ -2090,10 +2090,10 @@ angular.module("meleme.filters", []).filter("split", [function () {
         }, function (b) {
             switch (a.user.serverError = !0, b.data.name) {
                 case"VALIDATION_FAILED":
-                    a.user.errorMsg = "ÇëÌîĞ´ÊÖ»úºÅÂë";
+                    a.user.errorMsg = "è¯·å¡«å†™æ‰‹æœºå·ç ";
                     break;
                 default:
-                    a.user.errorMsg = "·şÎñÆ÷ºÃÏñÓĞÎÊÌâÀ²"
+                    a.user.errorMsg = "æœåŠ¡å™¨å¥½åƒæœ‰é—®é¢˜å•¦"
             }
         })
     }
@@ -2127,14 +2127,14 @@ angular.module("meleme.filters", []).filter("split", [function () {
                 0 === c.loading && (c.$apply(function () {
                     c.loading = 1
                 }), setTimeout(function () {
-                    2 !== c.loading && (swal("³ö´íÀ²", "²»ºÃÒâË¼£¬ÕÒ²»µ½µØÖ·!", "warning"), c.$apply(function () {
+                    2 !== c.loading && (swal("å‡ºé”™å•¦", "ä¸å¥½æ„æ€ï¼Œæ‰¾ä¸åˆ°åœ°å€!", "warning"), c.$apply(function () {
                         c.loading = -1
                     }))
                 }, 5e3), navigator.geolocation.getCurrentPosition(function (e) {
                     var g = b.transform(e.coords.latitude, e.coords.longitude);
                     a.get({type: "geohash", geohash: Geohash.encode(g[0], g[1]).substr(0, 12)}, function (a) {
                         if (!a.error && 0 !== a.data.length) {
-                            if (!a.data.address && !a.data.name)return c.loading = -1, swal("³ö´íÀ²", "²»ºÃÒâË¼£¬ÕÒ²»µ½µØÖ·!", "warning");
+                            if (!a.data.address && !a.data.name)return c.loading = -1, swal("å‡ºé”™å•¦", "ä¸å¥½æ„æ€ï¼Œæ‰¾ä¸åˆ°åœ°å€!", "warning");
                             var b = d.val() + a.data.address + a.data.name;
                             d.val(b), f.$setViewValue(b), c.loading = 2
                         }
@@ -2190,7 +2190,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         d.on("change", function () {
             var f = d[0].files[0], g = e.simpleUpload;
             if (f) {
-                if (!/^image\//.test(f.type))return swal("½öÖ§³ÖÍ¼Æ¬ÎÄ¼ş£¡");
+                if (!/^image\//.test(f.type))return swal("ä»…æ”¯æŒå›¾ç‰‡æ–‡ä»¶ï¼");
                 var h = document.createElement("img"), i = 210;
                 h.style.position = "absolute", h.style.top = "100%", h.style.left = "100%", h.onload = function () {
                     var d = document.createElement("canvas"), e = d.getContext("2d");
@@ -2201,7 +2201,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
                         h: i,
                         w: i
                     }, g, function (a) {
-                        return swal("ÉÏ´«Ê§°Ü")
+                        return swal("ä¸Šä¼ å¤±è´¥")
                     })
                 }, h.src = window.URL.createObjectURL(f)
             }
@@ -2320,35 +2320,35 @@ angular.module("meleme.filters", []).filter("split", [function () {
     function a(a, b) {
         switch (a.removeClass("red", "gray", "blue", "orange"), b) {
             case-5:
-                a.addClass("red"), a.text("µÈ´ıÖ§¸¶");
+                a.addClass("red"), a.text("ç­‰å¾…æ”¯ä»˜");
                 break;
             case-3:
-                a.addClass("red"), a.text("ÕıÔÚÖ§¸¶");
+                a.addClass("red"), a.text("æ­£åœ¨æ”¯ä»˜");
                 break;
             case-4:
-                a.addClass("gray"), a.text("Ö§¸¶Ê§°Ü");
+                a.addClass("gray"), a.text("æ”¯ä»˜å¤±è´¥");
                 break;
             case 1:
-                a.addClass("blue"), a.text("´ı¶öÁËÃ´È·ÈÏ");
+                a.addClass("blue"), a.text("å¾…é¥¿äº†ä¹ˆç¡®è®¤");
                 break;
             case-2:
             case 0:
-                a.addClass("orange"), a.text("´ı²ÍÌüÈ·ÈÏ");
+                a.addClass("orange"), a.text("å¾…é¤å…ç¡®è®¤");
                 break;
             case-1:
-                a.addClass("gray"), a.text("ÎŞĞ§¶©µ¥");
+                a.addClass("gray"), a.text("æ— æ•ˆè®¢å•");
                 break;
             case 11:
-                a.addClass("gray"), a.text("¶©µ¥ÒÑÍê³É");
+                a.addClass("gray"), a.text("è®¢å•å·²å®Œæˆ");
                 break;
             case 2:
-                a.addClass("blue"), a.text("¶öµ¥ÒÑÈ·ÈÏ");
+                a.addClass("blue"), a.text("é¥¿å•å·²ç¡®è®¤");
                 break;
             case 3:
-                a.addClass("orange"), a.text("ÍË¿îÖĞ");
+                a.addClass("orange"), a.text("é€€æ¬¾ä¸­");
                 break;
             case-8:
-                a.addClass("gray"), a.text("¶©µ¥ÒÑÈ¡Ïû")
+                a.addClass("gray"), a.text("è®¢å•å·²å–æ¶ˆ")
         }
     }
 
@@ -2400,8 +2400,8 @@ angular.module("meleme.filters", []).filter("split", [function () {
         scope: {state: "=", restaurant: "="},
         templateUrl: "/msite/html/restaurant_tabs.html",
         link: function (b, c, d) {
-            b.tabs = [{name: "²Ëµ¥", state: "menu"}, {name: "ÕÕÆ¬", state: "photos"}, {
-                name: "ÏêÇé",
+            b.tabs = [{name: "èœå•", state: "menu"}, {name: "ç…§ç‰‡", state: "photos"}, {
+                name: "è¯¦æƒ…",
                 state: "info"
             }], b.changeState = function (c) {
                 a.url(b.restaurant.name_for_url + "/" + ("menu" === c ? "" : c))
@@ -2443,7 +2443,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
             }).$promise.then(function () {
                     return c.get({user_id: f.user_id, order_id: b.id}).$promise
                 }).then(function (b) {
-                    f.orderactivity = b, f.hideself(), b.activity && (f.activity = b.activity, f.gettype = 1 === f.activity.type ? "ÁìÈ¡½±È¯" : "³éÈ¡Àñ°ü", f.detailURL = f.changeURL(f.activity.detail_url), f.activity.bgpath = a.FUSSBASE + f.activity.back_ground_path)
+                    f.orderactivity = b, f.hideself(), b.activity && (f.activity = b.activity, f.gettype = 1 === f.activity.type ? "é¢†å–å¥–åˆ¸" : "æŠ½å–ç¤¼åŒ…", f.detailURL = f.changeURL(f.activity.detail_url), f.activity.bgpath = a.FUSSBASE + f.activity.back_ground_path)
                 }), f.getGiftcode = function () {
                 c.save({user_id: f.user_id, order_id: b.id, activity_id: f.orderactivity.activity.id}, function (a) {
                     f.orderactivity = a, f.hideself()
@@ -2477,12 +2477,12 @@ angular.module("meleme.filters", []).filter("split", [function () {
                 }
             }, function () {
                 setTimeout(function () {
-                    throw new Error('notwig: Ä£°å×ÊÔ´¼ÓÔØ´íÎó, src="' + i + '"')
+                    throw new Error('notwig: æ¨¡æ¿èµ„æºåŠ è½½é”™è¯¯, src="' + i + '"')
                 })
             })
         }
     }
-}]), angular.module("meleme.services", []).constant("BALANCETEXT", ["¶öÁËÃ´ÕË»§³äÖµ", "Óà¶îÏû·Ñ", "¶©µ¥ÊÕÈë", "¶©µ¥ÍË¿î", "ÉêÇëÌáÏÖ", "ÌáÏÖÊ§°Ü", "·ÏÆú", "ÓÃ»§ÌáÏÖ", "Ö§¸¶Ê§°ÜÍË¿î", "Èı·½Ö§¸¶Ïû·Ñ", "ºÏÍ¬¸¶·Ñ", "¶©µ¥È¡Ïû¿Û¿î", "ÄäÃûÓÃ»§ÌáÏÖ", "ÄäÃûÓÃ»§ÍË¿î", "·ÏÆú", "ºÏÍ¬ÍË¿î"]).constant("ORDERTEXT", ["³É¹¦ÏÂµ¥", "ÓĞĞ§¶©µ¥", "ÎŞĞ§¶©µ¥", "µãÆÀ¶©µ¥", "µãÆÀÊ³Îï", "¶Ò»»ÀñÆ·", "ÏµÍ³´¦Àí", "¹ÜÀíÔ±´¦Àí", "ÉÏ´«Ê³ÎïÍ¼Æ¬", "µãÆÀ²ÍÌü·şÎñ"]).factory("City", ["$resource", function (a) {
+}]), angular.module("meleme.services", []).constant("BALANCETEXT", ["é¥¿äº†ä¹ˆè´¦æˆ·å……å€¼", "ä½™é¢æ¶ˆè´¹", "è®¢å•æ”¶å…¥", "è®¢å•é€€æ¬¾", "ç”³è¯·æç°", "æç°å¤±è´¥", "åºŸå¼ƒ", "ç”¨æˆ·æç°", "æ”¯ä»˜å¤±è´¥é€€æ¬¾", "ä¸‰æ–¹æ”¯ä»˜æ¶ˆè´¹", "åˆåŒä»˜è´¹", "è®¢å•å–æ¶ˆæ‰£æ¬¾", "åŒ¿åç”¨æˆ·æç°", "åŒ¿åç”¨æˆ·é€€æ¬¾", "åºŸå¼ƒ", "åˆåŒé€€æ¬¾"]).constant("ORDERTEXT", ["æˆåŠŸä¸‹å•", "æœ‰æ•ˆè®¢å•", "æ— æ•ˆè®¢å•", "ç‚¹è¯„è®¢å•", "ç‚¹è¯„é£Ÿç‰©", "å…‘æ¢ç¤¼å“", "ç³»ç»Ÿå¤„ç†", "ç®¡ç†å‘˜å¤„ç†", "ä¸Šä¼ é£Ÿç‰©å›¾ç‰‡", "ç‚¹è¯„é¤å…æœåŠ¡"]).factory("City", ["$resource", function (a) {
     return a("/v1/city/:code/:district", {code: "@code", district: "@district"}, {get: {method: "GET", cache: !0}})
 }]).factory("Place", ["$resource", function (a) {
     return a("/v1/place", {}, {get: {method: "GET", cache: !0}})
@@ -2646,7 +2646,7 @@ angular.module("meleme.filters", []).filter("split", [function () {
         order_id: "@order_id"
     })
 }]).factory("Page", ["UserAgent", function (a) {
-    return {title: "browser" === a ? "½ĞÍâÂôÉÏ¶öÁËÃ´ - ¶öÁËÃ´" : "", city: {}}
+    return {title: "browser" === a ? "å«å¤–å–ä¸Šé¥¿äº†ä¹ˆ - é¥¿äº†ä¹ˆ" : "", city: {}}
 }]).factory("Spell", ["$resource", "$location", "SpellStatus", "$rootScope", function (a, b, c, d) {
     var e = d.MAINBASE + "/groupcart/:cartId/:sig/:action";
     return a(e, {cartId: "@cartId", sig: "@sig", action: "@action"}, {
@@ -2862,27 +2862,27 @@ angular.module("meleme.filters", []).filter("split", [function () {
     }, f
 }]).service("I18N", function () {
     this.hongbao = {
-        statusTextMap: {1: "ÒÑÇÀÍê", 2: "ÒÑÇÀ¹ı", 3: "{amount}Ôª", 4: "{amount}Ôª", 5: "Ã»ÇÀµ½", 6: "ÒÑÈ¡Ïû", 7: "ĞªĞª°É"},
+        statusTextMap: {1: "å·²æŠ¢å®Œ", 2: "å·²æŠ¢è¿‡", 3: "{amount}å…ƒ", 4: "{amount}å…ƒ", 5: "æ²¡æŠ¢åˆ°", 6: "å·²å–æ¶ˆ", 7: "æ­‡æ­‡å§"},
         statusCaptionMap: {
-            1: "ºì°üÒÑÇÀÍêÁË",
-            2: "Õâ¸öºì°üÒÑ¾­ÇÀ¹ıÁË~",
-            3: "¹§Ï²Äã»ñµÃ¶öÁËÃ´ºì°ü~",
-            4: "¹§Ï²Äã»ñµÃ¶öÁËÃ´ºì°ü~",
-            5: "Õâ¸öºì°üÄã²»ÄÜÇÀÓ´~",
-            6: "Õâ¸öºì°üÒÑ¾­È¡ÏûÁË",
-            7: "µ±ÌìÒÑÁìÈ¡ºì°üÊıÁ¿³¬¹ıÒ»¶¨ÊıÁ¿À²~"
+            1: "çº¢åŒ…å·²æŠ¢å®Œäº†",
+            2: "è¿™ä¸ªçº¢åŒ…å·²ç»æŠ¢è¿‡äº†~",
+            3: "æ­å–œä½ è·å¾—é¥¿äº†ä¹ˆçº¢åŒ…~",
+            4: "æ­å–œä½ è·å¾—é¥¿äº†ä¹ˆçº¢åŒ…~",
+            5: "è¿™ä¸ªçº¢åŒ…ä½ ä¸èƒ½æŠ¢å“Ÿ~",
+            6: "è¿™ä¸ªçº¢åŒ…å·²ç»å–æ¶ˆäº†",
+            7: "å½“å¤©å·²é¢†å–çº¢åŒ…æ•°é‡è¶…è¿‡ä¸€å®šæ•°é‡å•¦~"
         },
         amountMessageMap: {
-            1: "ÈËÆ·ÔÜµÄºÃ£¬¿¼ÊÔÃ»·³ÄÕ",
-            2: "²ğºì°üµÄ×ËÊÆ»¹²»´íÅ¶",
-            3: "²ğºì°üµÄ×ËÊÆ»¹²»´íÅ¶",
-            4: "²ğºì°üµÄ×ËÊÆ»¹²»´íÅ¶",
-            5: "ÇÀºì°ü£¬»¹µÃ¿¿ÑÕÖµ±¬±í",
-            6: "ÇÀºì°ü£¬»¹µÃ¿¿ÑÕÖµ±¬±í",
-            7: "ÇÀºì°ü£¬»¹µÃ¿¿ÑÕÖµ±¬±í",
-            8: "ÇÀºì°ü£¬»¹µÃ¿¿ÑÕÖµ±¬±í",
-            9: "ÇÀºì°ü£¬»¹µÃ¿¿ÑÕÖµ±¬±í",
-            10: "ÇÀºì°ü£¬»¹µÃ¿¿ÑÕÖµ±¬±í"
+            1: "äººå“æ”’çš„å¥½ï¼Œè€ƒè¯•æ²¡çƒ¦æ¼",
+            2: "æ‹†çº¢åŒ…çš„å§¿åŠ¿è¿˜ä¸é”™å“¦",
+            3: "æ‹†çº¢åŒ…çš„å§¿åŠ¿è¿˜ä¸é”™å“¦",
+            4: "æ‹†çº¢åŒ…çš„å§¿åŠ¿è¿˜ä¸é”™å“¦",
+            5: "æŠ¢çº¢åŒ…ï¼Œè¿˜å¾—é é¢œå€¼çˆ†è¡¨",
+            6: "æŠ¢çº¢åŒ…ï¼Œè¿˜å¾—é é¢œå€¼çˆ†è¡¨",
+            7: "æŠ¢çº¢åŒ…ï¼Œè¿˜å¾—é é¢œå€¼çˆ†è¡¨",
+            8: "æŠ¢çº¢åŒ…ï¼Œè¿˜å¾—é é¢œå€¼çˆ†è¡¨",
+            9: "æŠ¢çº¢åŒ…ï¼Œè¿˜å¾—é é¢œå€¼çˆ†è¡¨",
+            10: "æŠ¢çº¢åŒ…ï¼Œè¿˜å¾—é é¢œå€¼çˆ†è¡¨"
         }
     }
 }), angular.module("UBT").config(["$httpProvider", function (a) {

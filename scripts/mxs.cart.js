@@ -8,15 +8,15 @@ angular.module("meleme.cart")
                 errorMsg: null
             }, a.list = h.list, a.totalAmount = h.totalAmount, a.totalPrice = h.totalPrice, a.getRestaurant = h.getRestaurant, a.removeFood = h.remove, "/cart" === c.path() && wechat("hideOptionMenu"), a.spell.enable) {
             var k = localStorage.getItem("wechatInfo");
-            k = k ? JSON.parse(k) : {}, a.cartTitle = "ÒÑÑ¡ÔñÃÀÊ³", a.spell.url = "?cartId=" + i.cartId + "&sig=" + i.sig + "&spell=1", a.spellName = k.nickname;
+            k = k ? JSON.parse(k) : {}, a.cartTitle = "å·²é€‰æ‹©ç¾é£Ÿ", a.spell.url = "?cartId=" + i.cartId + "&sig=" + i.sig + "&spell=1", a.spellName = k.nickname;
             var l, m = function () {
                 return "/spell" === c.path() && l ? clearTimeout(l) : void e.get({
                     cartId: i.cartId,
                     sig: i.sig
                 }, function (b) {
                     return b.error ? c.redirect("/404") : void(f(b.data) > 0 && !a.spell.finish && swal({
-                        title: "³ö´íÀ²",
-                        text: "Æ´µ¥ÒÑ¾­Í£Ö¹£¬Çë·µ»Ø²é¿´×´Ì¬£¡",
+                        title: "å‡ºé”™å•¦",
+                        text: "æ‹¼å•å·²ç»åœæ­¢ï¼Œè¯·è¿”å›æŸ¥çœ‹çŠ¶æ€ï¼",
                         type: "warning"
                     }, function () {
                         c.url("/spell?spell=1&cartId=" + i.cartId + "&sig=" + i.sig)
@@ -24,7 +24,7 @@ angular.module("meleme.cart")
                 })
             };
             m(), l = setTimeout(m, 1e4)
-        } else a.cartTitle = "ÃÀÊ³Àº×Ó", a.spell.enable = !1;
+        } else a.cartTitle = "ç¾é£Ÿç¯®å­", a.spell.enable = !1;
         a.checkCart = function () {
             if (a.spell.enable || c.url("/delivery?total=" + a.totalPrice() + "&name=" + h.getRestaurant().name_for_url), a.spellName) {
                 var b = [];
@@ -57,7 +57,7 @@ angular.module("meleme.cart")
                 var e = b.food, f = b.restaurant || b.getRestaurant();
                 (5 === f.status || 1 === f.status) && (a.isEmpty() && a.setRestaurant(f), b.add = function () {
                     if (f.name_for_url === a.getRestaurant().name_for_url || a.isEmpty())a.add(e); else {
-                        var b = confirm("ÄãµÄÃÀÊ³Àº×ÓÀïÓĞÆäËü²ÍÌüµÄÃÀÊ³£¬Çå¿ÕÃÀÊ³Àº×ÓÂğ£¿");
+                        var b = confirm("ä½ çš„ç¾é£Ÿç¯®å­é‡Œæœ‰å…¶å®ƒé¤å…çš„ç¾é£Ÿï¼Œæ¸…ç©ºç¾é£Ÿç¯®å­å—ï¼Ÿ");
                         if (!b)return;
                         a.clear(), a.setRestaurant(f), a.add(e)
                     }
@@ -170,7 +170,7 @@ angular.module("meleme.cart")
             return a.post({come_from: "mobile"}).$promise.then(function (a) {
                 f.id = a.cart.id, f.sig = a.sig, localStorage.setItem("cartId", JSON.stringify(a.cart.id)), localStorage.setItem("cartSig", JSON.stringify(a.sig)), localStorage.setItem("cartList", "{}"), localStorage.setItem("cartRestaurant", "{}"), c.resolve(a)
             }, function () {
-                throw"¹ºÎï³µ´´½¨Ê§°Ü"
+                throw"è´­ç‰©è½¦åˆ›å»ºå¤±è´¥"
             }), c.$promise = c.promise, c.$promise
         }, f.get = function () {
             var a = b.defer();

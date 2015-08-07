@@ -1,0 +1,29 @@
+<header class="xs-header">
+    <a class="xs-header-back" goback="/index"><span></span>返回</a>
+
+    <div class="xs-header-title flex">
+        <span class="header-rst-name"></span>
+    </div>
+</header>
+<div class="ui-flashbar error" ng-show="error" ng-bind="error.message"></div>
+<form class="logreg-form">
+    <div class="logreg-inputs">
+        <div class="input-group" ng-class="{'ui_error':false}">
+            <input type="tel" class="ui-input" placeholder="" name="mobile" ng-model=""
+                   ng-pattern="/^1[3-9]\d{9}$" required/>
+
+            <p class="input-tip"><span ng-if=""></span></p>
+        </div>
+        <div class="input-group input-group-msgcode" ng-class="">
+            <div class="input-group-msgcode-inner">
+                <input type="text" class="ui-input" name="code" ng-pattern="/^\d{6}$" placeholder="请输入验证码">
+                <button class="ui-btn" type="button" ng-disabled="countdown || regform.mobile.$invalid"
+                        ng-click="sendCode('sms')" disabled="disabled"><span ng-bind="countdown  ? '重发验证码' : '发送验证码'"
+                                                                             class="ng-binding">发送验证码</span>
+                    <countdown class="ui-parenthese countdown_number ng-hide" time="30" ng-show="countdown"></countdown>
+                </button>
+            </div>
+            <p class="input-tip"><span ng-if="regform.code.$error.required">请输入验证码</span></p>
+        </div>
+    </div>
+</form>

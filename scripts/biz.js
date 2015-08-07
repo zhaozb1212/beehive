@@ -1,6 +1,8 @@
 angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
-    .controller('rootCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
-        $rootScope.ROOTHOST = 'http://123.57.249.80:80/beehive/microsite/';
+    .controller('rootCtrl', ['$scope', '$rootScope', "userFactory", function ($scope, $rootScope, userFactory) {
+        //init user
+        userFactory.pullRemote();
+        //alert(JSON.stringify(userFactory.user))
     }])
 
     .directive('skateShoes', ['$timeout', function (a) {
@@ -10,7 +12,8 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
                 var e, f = {click: !0, mouseWheel: !0};
                 b.$watch(d.skateShoes, function () {
                     b && a(function () {
-                        e && e.destroy(), e = new IScroll(c[0], f);
+                        e && e.destroy();
+                        e = new IScroll(c[0], f);
                     })
                 })
             }
@@ -54,18 +57,6 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
         }
     }])
 
-    .controller('orderCtrl', ['$scope', 'address', 'Cart', function (scope, address, Cart) {
-        address.save({}, function (addrData) {
-            scope.address = addrData.data;
-        });
-
-        scope.selectAddr = function (addr) {
-            console.log('--->>', addr);
-            scope.crtAddress = addr;
-            scope.showAddr = false;
-        }
-    }])
-
     .directive('addNote', [function () {
         return function (e, t) {
             e.note = e.note || "", e.noteClick = function (t) {
@@ -78,7 +69,6 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
 
     .config(['$routeProvider', '$locationProvider', function (routeProvider, locationProvider) {
         //locationProvider.html5Mode(true);
-        console.log('routeProvider', routeProvider);
         routeProvider.when('/index', {
             templateUrl: 'tpl/menuList.html',
             controller: 'listCtrl'
@@ -87,7 +77,7 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
             controller: 'cartCtrl'
         }).when('/order', {
             templateUrl: 'tpl/order.html',
-            controller: 'orderCtrl'
+            controller: 'cartCtrl'
         }).otherwise({
             templateUrl: 'tpl/menuList.html',
             controller: 'listCtrl'
@@ -95,7 +85,7 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
     }]);
 
 angular.module('mxs.cart', [])
-    .controller('cartCtrl', ['$scope', '$location', 'Cart', function (scope, $location, Cart) {
+    .controller('cartCtrl', ['$scope', '$rootScope', '$location', 'Cart', 'userFactory', 'address', function (scope, rootScope, $location, Cart, User, address) {
         Cart.init();
         scope.list = Cart.list;
         scope.totalAmount = Cart.totalAmount;
@@ -104,8 +94,54 @@ angular.module('mxs.cart', [])
         scope.decrease = Cart.decrease;
         scope.add = Cart.add;
 
+        address.save({}, function (addrData) {
+            var address = scope.address = addrData.data;
+            if (User.getProp("distributeId")) {
+                address.forEach(function (item, index, array) {
+                    if (item.id == User.getProp("id")) {
+                        scope.crtAddress = item;
+                    }
+                });
+            }
+        });
+
+        scope.selectAddr = function (addr) {
+            scope.crtAddress = addr;
+            scope.showAddr = false;
+        };
+
         scope.checkCart = function () {
-            $location.url('#/order');
+            var orderList = Cart.getOrder();
+            if (orderList === null) {
+                alert("请选择菜品");
+                return;
+            } else if (!scope.crtAddress) {
+                alert("请选择取餐地址");
+                return;
+            }
+            alert(JSON.stringify(User.user));
+            $.ajax({
+                url: rootScope.RESTBASE + "/order/commitorder",
+                type: "post",
+                //contentType: "application/json",
+                dataType: 'JSON',
+                data: {
+                    sig: "DBE8317A0D713425B738C762D1639492",
+                    userId: User.user.id || -1,
+                    voucherId: 0,
+                    orderType: 0,
+                    remark: scope.note + "" || "",
+                    totalPrice: Cart.totalPrice(),
+                    dishes: JSON.stringify(orderList)
+                },
+                success: function (data) {
+                    if (data.ret == 0) {
+                        alert("订单提交成功")
+                    } else {
+                        alert("订单提交失败：" + data.msg);
+                    }
+                }
+            })
         }
     }])
 
@@ -161,6 +197,15 @@ angular.module('mxs.cart', [])
                 }
                 return t;
             },
+            getOrder: function () {
+                var temp = {};
+                if (this.isEmpty()) return null;
+                for (var key in this.list) {
+                    temp[key] = this.list[key].quantity;
+                }
+
+                return temp;
+            },
             find: function (e) {
                 return this.list[e.id]
             },
@@ -174,7 +219,7 @@ angular.module('mxs.cart', [])
             clear: function () {
                 for (var e in this.list) delete this.list[e];
                 for (var t in a.restaurant) delete a.restaurant[t];
-                localStorage.setItem("cartList", "{}"), localStorage.setItem("cartRestaurant", "{}")
+                localStorage.setItem("cartList", "{}");
             }
         };
         n.init = function () {
@@ -222,3 +267,87 @@ angular.module('mxs.cart', [])
             }
         }
     }]);
+
+angular.module("mxs")
+    .factory("userFactory", ["$rootScope", "$http", "$location", function ($rootScope, $http, $location) {
+        var getUserCode = function () {
+            //var searchObj = $location.search();
+            //alert("angular location search obj: " + JSON.stringify(searchObj));
+            var tempCode = "";
+            var searchArr = location.search.slice(1).split("&");
+            for (var i = 0; i < searchArr.length; i++) {
+                var itemArr = searchArr[i].split("=");
+                if (itemArr[0] === "code") {
+                    tempCode = itemArr[1];
+                    break;
+                }
+            }
+            return tempCode;
+            //return searchObj && searchObj.code ? searchObj.code + "" : "";
+        };
+        //alert("userCode: " + getUserCode());
+        return userMod = {
+            user: {
+                id: void 0,
+                tel: void 0,
+                distributionId: void 0,
+                money: void 0
+            },
+            setUser: function (data) {
+                for (var prop in data) {
+                    if (this.user.hasOwnProperty(prop)) {
+                        this.user[prop] = data[prop];
+                    }
+                }
+            },
+            getProp: function (prop) {
+                if (prop) return;
+                return this.user[prop];
+            },
+            setProp: function (prop, value) {
+                if (!prop || !value) return;
+                return this.user[prop] = value;
+            },
+            pullRemote: function () {
+                var _this = this;
+                $http({
+                    method: "post",
+                    url: $rootScope.RESTBASE + "/user/userinfo",
+                    params: {
+                        sig: $rootScope.defaultSig.sig,
+                        code: getUserCode() + ""
+                    }
+                }).success(function (data) {
+                    _this.setUser(data.data);
+                })
+            }
+        };
+    }]);
+
+angular.module("mxs")
+    .controller("registerCtrl", ['$scope', function (scope) {
+        scope.user = {
+            mobile: "",
+            password: "",
+            code: ""
+        };
+    }])
+    .directive("countdown", function () {
+        var e, t = function (t, r, o) {
+            return o ? (o = +o, r.text(o), void(e = setInterval(function () {
+                return 0 !== o ? r.text(--o) : void t.$apply(function () {
+                    t.countdown = !1
+                })
+            }, 1e3))) : e && clearInterval(e)
+        };
+        return {
+            restrict: "E",
+            link: function (e, r, o) {
+                e.$watch("countdown", function (n) {
+                    return "stop" == n ? function () {
+                        t(e, r), e.countdown = !1
+                    }() : n ? t(e, r, o.time) : t(e, r)
+                })
+            }
+        }
+    });
