@@ -2,7 +2,6 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
     .controller('rootCtrl', ['$scope', '$rootScope', "userFactory", function ($scope, $rootScope, userFactory) {
         //init user
         userFactory.pullRemote();
-        //alert(JSON.stringify(userFactory.user))
     }])
 
     .directive('skateShoes', ['$timeout', function (a) {
@@ -48,7 +47,7 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
 
             for (var t in cacheDishType) {
                 if (type === cacheDishType[t]) {
-                    var tempDishes = cacheDishes && cacheDishes.filter(function (item, index, arr) {
+                    tempDishes = cacheDishes && cacheDishes.filter(function (item, index, arr) {
                             return item.typeId === parseInt(t);
                         });
                     scope.dishes = tempDishes;
@@ -78,14 +77,18 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
         }).when('/order', {
             templateUrl: 'tpl/order.html',
             controller: 'cartCtrl'
-        }).otherwise({
-            templateUrl: 'tpl/menuList.html',
-            controller: 'listCtrl'
-        })
+        }).when('/register', {
+                templateUrl: 'tpl/registertel.html',
+                controller: 'registerCtrl'
+            }
+        ).otherwise({
+                templateUrl: 'tpl/menuList.html',
+                controller: 'listCtrl'
+            })
     }]);
 
 angular.module('mxs.cart', [])
-    .controller('cartCtrl', ['$scope', '$rootScope', '$location', 'Cart', 'userFactory', 'address', function (scope, rootScope, $location, Cart, User, address) {
+    .controller('cartCtrl', ['$scope', '$rootScope', '$location', 'Cart', 'userFactory', 'address', '$window', '$http', function (scope, rootScope, $location, Cart, User, address, $window, $http) {
         Cart.init();
         scope.list = Cart.list;
         scope.totalAmount = Cart.totalAmount;
@@ -108,6 +111,24 @@ angular.module('mxs.cart', [])
         scope.selectAddr = function (addr) {
             scope.crtAddress = addr;
             scope.showAddr = false;
+            if (User.user.distributionId !== addr.id) {
+                $http({
+                        url: rootScope.RESTBASE + "/user/changedistribution",
+                        method: "post",
+                        params: {
+                            sig: rootScope.defaultSig.sig,
+                            userId: User.user.id,
+                            distributionId: addr.id
+                        }
+                    }
+                ).success(function (data) {
+                        User.user.distributionId = addr.id;//update user distribution
+                        alert("update distribute is success: " + JSON.stringify(data));
+                    })
+                    .error(function (data) {
+                        alert("update distribute is error: " + JSON.stringify(data));
+                    });
+            }
         };
 
         scope.checkCart = function () {
@@ -118,15 +139,16 @@ angular.module('mxs.cart', [])
             } else if (!scope.crtAddress) {
                 alert("请选择取餐地址");
                 return;
+            } else if (!User.user.tel) {
+                $window.location.href = "#/register";
+                return;
             }
-            alert(JSON.stringify(User.user));
             $.ajax({
                 url: rootScope.RESTBASE + "/order/commitorder",
                 type: "post",
-                //contentType: "application/json",
                 dataType: 'JSON',
                 data: {
-                    sig: "DBE8317A0D713425B738C762D1639492",
+                    sig: rootScope.defaultSig.sig,
                     userId: User.user.id || -1,
                     voucherId: 0,
                     orderType: 0,
@@ -136,16 +158,21 @@ angular.module('mxs.cart', [])
                 },
                 success: function (data) {
                     if (data.ret == 0) {
-                        alert("订单提交成功")
+                        alert(data.msg);
+                        localStorage.setItem("cartList", "{}");
                     } else {
                         alert("订单提交失败：" + data.msg);
                     }
+                },
+                error: function (data) {
+                    alert("fail: " + JSON.stringify(data));
                 }
             })
         }
     }])
 
-    .factory('Cart', ['$q', '$rootScope', '$location', function ($q, $rootScope, $location) {
+    .
+    factory('Cart', ['$q', '$rootScope', '$location', function ($q, $rootScope, $location) {
         var n = {
             list: {},
             add: function (e) {
@@ -271,8 +298,6 @@ angular.module('mxs.cart', [])
 angular.module("mxs")
     .factory("userFactory", ["$rootScope", "$http", "$location", function ($rootScope, $http, $location) {
         var getUserCode = function () {
-            //var searchObj = $location.search();
-            //alert("angular location search obj: " + JSON.stringify(searchObj));
             var tempCode = "";
             var searchArr = location.search.slice(1).split("&");
             for (var i = 0; i < searchArr.length; i++) {
@@ -283,9 +308,8 @@ angular.module("mxs")
                 }
             }
             return tempCode;
-            //return searchObj && searchObj.code ? searchObj.code + "" : "";
         };
-        //alert("userCode: " + getUserCode());
+
         return userMod = {
             user: {
                 id: void 0,
@@ -325,11 +349,64 @@ angular.module("mxs")
     }]);
 
 angular.module("mxs")
-    .controller("registerCtrl", ['$scope', function (scope) {
+    .controller("registerCtrl", ['$scope', '$rootScope', '$http', '$window', 'userFactory', 'Cart', function (scope, rootScope, $http, $window, user, Cart) {
         scope.user = {
             mobile: "",
-            password: "",
             code: ""
+        };
+        scope.sendCode = function () {
+            $http({
+                url: rootScope.RESTBASE + "/user/sendvalidatecode",
+                method: "post",
+                params: {
+                    sig: rootScope.defaultSig.sig,
+                    userId: user.user.id,
+                    tel: scope.user.mobile
+                }
+            }).success(function (data) {
+                alert("验证码发送成功.");
+                scope.countdown = !0;
+            }).error(function (data) {
+                scope.countdown = !1;
+            });
+        };
+        scope.updateTel = function () {
+            $http({
+                url: rootScope.RESTBASE + "/user/updatetel",
+                method: "post",
+                params: {
+                    sig: rootScope.defaultSig.sig,
+                    userId: user.user.id,
+                    tel: scope.user.mobile,
+                    validateCode: scope.user.code
+                }
+            }).success(function (data) {
+                var orderList = Cart.getOrder();
+                $.ajax({
+                    url: rootScope.RESTBASE + "/order/commitorder",
+                    type: "post",
+                    dataType: 'JSON',
+                    data: {
+                        sig: rootScope.defaultSig.sig,
+                        userId: user.user.id || -1,
+                        voucherId: 0,
+                        orderType: 0,
+                        remark: scope.note + "" || "",
+                        totalPrice: Cart.totalPrice(),
+                        dishes: JSON.stringify(orderList)
+                    },
+                    success: function (data) {
+                        if (data.ret == 0) {
+                            alert("订单提交成功");
+                            localStorage.setItem("cartList", "{}");
+                        } else {
+                            alert("订单提交失败：" + data.msg);
+                        }
+                    }
+                })
+            }).error(function (data) {
+                alert("更新手机号码失败：" + data.msg);
+            })
         };
     }])
     .directive("countdown", function () {
@@ -345,7 +422,8 @@ angular.module("mxs")
             link: function (e, r, o) {
                 e.$watch("countdown", function (n) {
                     return "stop" == n ? function () {
-                        t(e, r), e.countdown = !1
+                        t(e, r);
+                        e.countdown = !1
                     }() : n ? t(e, r, o.time) : t(e, r)
                 })
             }
