@@ -221,6 +221,15 @@ angular.module('mxs.cart', [])
             }
         };
 
+        scope.checkStatus = function () {
+            var orderList = Cart.getOrder();
+            if (orderList === null) {
+                alert("请选择菜品。");
+            } else {
+                $window.location.href = "#/cart";
+            }
+        };
+
         scope.checkCart = function () {
             var orderList = Cart.getOrder();
             if (orderList === null) {

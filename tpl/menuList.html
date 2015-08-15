@@ -47,13 +47,13 @@
         </section>
     </section>
 </div>
-<a class="xs-menu-cart" ng-href="#/cart" ng-controller="cartCtrl">
+<a class="xs-menu-cart" href="javascript:void(0);" ng-controller="cartCtrl">
     <div class="xs-menu-cart-summary">
         <span class="cart-bg"></span>
         <span class="cart-count" ng-bind="totalAmount()||0">2份</span>
         <span class="cart-price" ng-bind="totalPrice()||0">122</span>
     </div>
-    <div class="xs-menu-checkout">
+    <div class="xs-menu-checkout" ng-click="checkStatus()">
         确认美食
     </div>
 </a>
