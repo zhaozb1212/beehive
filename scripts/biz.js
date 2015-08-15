@@ -96,7 +96,7 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
         }).when('/register', {
             templateUrl: 'tpl/registertel.html',
             controller: 'registerCtrl'
-        }).when('/detail', {
+        }).when('/detail/:id', {
             templateUrl: 'tpl/order_detail.html',
             controller: 'tradeOrderCtrl'
         }).otherwise({
@@ -106,24 +106,32 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
     }]);
 
 angular.module("mxs")
-    .controller("tradeOrderCtrl", ["$scope", "$rootScope", 'orderFactory', function ($scope, $rootScope, order) {
-        order.initOrder(86);
-        var orderStatusEnum = {0: "处理中", 1: "配送中", 2: "已完成", 3: "已取消"};
-        $scope.order = order;
-        $scope.dishes = order.dishes;
-        $scope.status = {"orderId": order.orderId, "title": orderStatusEnum[order.orderId], "description": ""};
-        $scope.total = order.totalPrice;
-        $scope.foodQuantity = function () {
-            var totalCount = 0;
-            for (var i = 0; i < order.dishes.length; i++) {
-                var dishItem = order.dishes[i];
-                totalCount += dishItem.count;
-            }
-            return totalCount;
-        };
-
+    .controller("tradeOrderCtrl", ["$scope", "$rootScope", '$routeParams', 'orderFactory', function ($scope, $rootScope, $routeParams, order) {
+        var orderDeferred = order.pullOrder($routeParams.id);
+        var orderStatusEnum = ["处理中", "配送中", "已完成", "已取消"];
+        orderDeferred.then(function (data) {
+            order.initOrder(data);
+            var orderDetail = order.order;
+            $scope.order = orderDetail;
+            $scope.dishes = orderDetail.dishes;
+            $scope.status = {
+                "orderId": orderDetail.orderId,
+                "title": orderStatusEnum[orderDetail.status],
+                "description": ""
+            };
+            $scope.total = orderDetail.totalPrice;
+            $scope.foodQuantity = function () {
+                var totalCount = 0;
+                for (var i = 0; i < orderDetail.dishes.length; i++) {
+                    var dishItem = orderDetail.dishes[i];
+                    totalCount += dishItem.count;
+                }
+                return totalCount;
+            };
+        });
     }])
-    .factory("orderFactory", ['$q', '$rootScope', '$q', '$http', function ($scope, $rootScope, $q, $http) {
+    .
+    factory("orderFactory", ['$q', '$rootScope', '$q', '$http', function ($scope, $rootScope, $q, $http) {
         var orderFactory = {};
 
         orderFactory.order = {
@@ -140,15 +148,13 @@ angular.module("mxs")
             dishes: ""
         };
 
-        orderFactory.initOrder = function (orderId) {
-            if (!orderId) return;
-            this.pullOrder(orderId).then(function (order) {
-                for (var prop in order) {
-                    if (this.order.hasOwnProperty(prop)) {
-                        this.order[prop] = order[prop];
-                    }
+        orderFactory.initOrder = function (order) {
+            if (!order) return;
+            for (var prop in order) {
+                if (this.order.hasOwnProperty(prop)) {
+                    this.order[prop] = order[prop];
                 }
-            })
+            }
         };
 
         orderFactory.pullOrder = function (orderId) {
@@ -255,12 +261,12 @@ angular.module('mxs.cart', [])
                     totalPrice: Cart.totalPrice(),
                     dishes: JSON.stringify(orderList)
                 },
-                success: function (data) {
-                    if (data.ret == 0) {
-                        alert(data.msg);
+                success: function (res) {
+                    if (res.ret == 0) {
                         localStorage.setItem("cartList", "{}");
+                        $window.location.href = "#/detail/" + res.id;
                     } else {
-                        alert("订单提交失败：" + data.msg);
+                        alert("订单提交失败：" + res.msg);
                     }
                 },
                 error: function (data) {
@@ -497,8 +503,10 @@ angular.module("mxs")
                     },
                     success: function (data) {
                         if (data.ret == 0) {
-                            alert("订单提交成功");
+                            alert(1);
+                            alert("订单提交成功: " + JSON.stringify(data));
                             localStorage.setItem("cartList", "{}");
+                            $window.location.href = "#/detail";
                         } else {
                             alert("订单提交失败：" + data.msg);
                         }

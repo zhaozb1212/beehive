@@ -1,5 +1,5 @@
 <header class="xs-header">
-    <a class="xs-header-back" goback="#/order"><span></span>返回</a>
+    <a class="xs-header-back" goback="#/order" ng-if="false"><span></span>返回</a>
 
     <div class="xs-header-title flex">
         <span class="header-rst-name">订单详情</span>
@@ -7,12 +7,12 @@
 </header>
 <div class="trade-order order-status">
     <div class="torder-status-now">
-        <p ng-bind="status.title"></p>
+        <p ng-bind="'订单状态：'+status.title"></p>
 
         <p class="torder-status-tip" ng-bind="status.description"></p>
     </div>
     <div class="trade-btn-block">
-        <a class="ui-btn ui-main-btn" ng-href="/index.html">继续点餐</a>
+        <a class="ui-btn ui-main-btn" ng-href="#/index.html">继续点餐</a>
     </div>
 </div>
 <section class="trade-block">
@@ -37,10 +37,10 @@
 <section class="trade-block btn-placeholer">
     <h3 class="tblock-title">订单信息</h3>
     <ul class="tblock-list">
-        <li class="tblock-list-item" ng-bind="\'订单号：\' + order.orderId"></li>
-        <li class="tblock-list-item" ng-bind="\'联系电话：\' + order.tel"></li>
-        <li class="tblock-list-item" ng-bind="\'取餐点：\' + order.distribution"></li>
-        <li class="tblock-list-item" ng-bind="\'支付方式：\' + (order.orderType === 1 ? \'在线支付\' : \'餐到付款\')"></li>
-        <li class="tblock-list-item" ng-bind="\'下单时间：\' + (order.createTime | date: \'yyyy-MM-dd HH:mm\')"></li>
+        <li class="tblock-list-item" ng-bind="'订单号：' + order.orderId"></li>
+        <li class="tblock-list-item" ng-bind="'联系电话：' + order.tel"></li>
+        <li class="tblock-list-item" ng-bind="'取餐点：' + order.distribution"></li>
+        <li class="tblock-list-item" ng-bind="'支付方式：' + (order.orderType === 1 ? '在线支付' : '餐到付款')"></li>
+        <li class="tblock-list-item" ng-bind="'下单时间：' + (order.createTime | date: 'yyyy-MM-dd HH:mm')"></li>
     </ul>
 </section>
