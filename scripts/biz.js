@@ -1,20 +1,37 @@
 angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
+    .constant("RESTAURANT_SECTIONS_HEIGHT", {
+        header: {
+            className: "eleme-header",
+            height: 44
+        }
+    })
     .controller('rootCtrl', ['$scope', '$rootScope', "userFactory", function ($scope, $rootScope, userFactory) {
         //init user
         userFactory.pullRemote();
     }])
 
-    .directive('skateShoes', ['$timeout', function (a) {
+    .directive('skateShoes', ['$timeout', function (timeout) {
         return {
             restrict: 'A',
-            link: function (b, c, d) {
-                var e, f = {click: !0, mouseWheel: !0};
-                b.$watch(d.skateShoes, function () {
-                    b && a(function () {
-                        e && e.destroy();
-                        e = new IScroll(c[0], f);
+            link: function (scope, ele, attr) {
+                var scrollInstance, scrollConfig = {click: !0, mouseWheel: !0};
+                scope.$watch(attr.skateShoes, function (data) {
+                    data && timeout(function () {
+                        scrollInstance && scrollInstance.destroy();
+                        scrollInstance = new IScroll(ele[0], scrollConfig);
                     })
                 })
+            }
+        }
+    }])
+
+    .directive("restaurantViewport", ['$timeout', 'RESTAURANT_SECTIONS_HEIGHT', function ($timeout, SECTIONS_HEIGHT) {
+        return {
+            restrict: "A",
+            link: function (scope, element) {
+                var clientH = window.document.documentElement.clientHeight;
+                for (var prop in SECTIONS_HEIGHT) clientH -= SECTIONS_HEIGHT[prop].height;
+                element.css("height", clientH + "px");
             }
         }
     }])
@@ -41,7 +58,6 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
             scope.dishes = tempDishes;
         });
         scope.currentIndex = 1;
-
         scope.selectMenu = function (index, type) {
             (scope.currentIndex !== index) && (scope.currentIndex = index);
 
@@ -78,13 +94,87 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
             templateUrl: 'tpl/order.html',
             controller: 'cartCtrl'
         }).when('/register', {
-                templateUrl: 'tpl/registertel.html',
-                controller: 'registerCtrl'
+            templateUrl: 'tpl/registertel.html',
+            controller: 'registerCtrl'
+        }).when('/detail', {
+            templateUrl: 'tpl/order_detail.html',
+            controller: 'tradeOrderCtrl'
+        }).otherwise({
+            templateUrl: 'tpl/menuList.html',
+            controller: 'listCtrl'
+        })
+    }]);
+
+angular.module("mxs")
+    .controller("tradeOrderCtrl", ["$scope", "$rootScope", 'orderFactory', function ($scope, $rootScope, order) {
+        order.initOrder(86);
+        var orderStatusEnum = {0: "处理中", 1: "配送中", 2: "已完成", 3: "已取消"};
+        $scope.order = order;
+        $scope.dishes = order.dishes;
+        $scope.status = {"orderId": order.orderId, "title": orderStatusEnum[order.orderId], "description": ""};
+        $scope.total = order.totalPrice;
+        $scope.foodQuantity = function () {
+            var totalCount = 0;
+            for (var i = 0; i < order.dishes.length; i++) {
+                var dishItem = order.dishes[i];
+                totalCount += dishItem.count;
             }
-        ).otherwise({
-                templateUrl: 'tpl/menuList.html',
-                controller: 'listCtrl'
+            return totalCount;
+        };
+
+    }])
+    .factory("orderFactory", ['$q', '$rootScope', '$q', '$http', function ($scope, $rootScope, $q, $http) {
+        var orderFactory = {};
+
+        orderFactory.order = {
+            orderId: "",
+            status: "",
+            takeNo: "",
+            createTime: "",
+            updateTime: "",
+            orderType: "",
+            distribution: "",
+            tel: "",
+            operator: "",
+            totalPrice: "",
+            dishes: ""
+        };
+
+        orderFactory.initOrder = function (orderId) {
+            if (!orderId) return;
+            this.pullOrder(orderId).then(function (order) {
+                for (var prop in order) {
+                    if (this.order.hasOwnProperty(prop)) {
+                        this.order[prop] = order[prop];
+                    }
+                }
             })
+        };
+
+        orderFactory.pullOrder = function (orderId) {
+            var deferred = $q.defer();
+            if (!orderId) deferred.reject("orderId is null.");
+            $http({
+                url: $rootScope.RESTBASE + "/order/orderdetail",
+                method: "POST",
+                params: {
+                    sig: $rootScope.defaultSig.sig,
+                    orderId: orderId
+                }
+            }).success(function (data) {
+                if (data.ret === 0) {
+                    deferred.resolve(data.data);
+                } else {
+                    deferred.reject(data);
+                }
+            }).error(function (data) {
+                deferred.reject(data);
+            });
+
+            return deferred.promise;
+        };
+
+        return orderFactory;
     }]);
 
 angular.module('mxs.cart', [])
@@ -123,10 +213,10 @@ angular.module('mxs.cart', [])
                     }
                 ).success(function (data) {
                         User.user.distributionId = addr.id;//update user distribution
-                        alert("update distribute is success: " + JSON.stringify(data));
+                        console.log("update distribute is success: " + JSON.stringify(data));
                     })
                     .error(function (data) {
-                        alert("update distribute is error: " + JSON.stringify(data));
+                        console.log("update distribute is error: " + JSON.stringify(data));
                     });
             }
         };
@@ -200,7 +290,8 @@ angular.module('mxs.cart', [])
                             quantity: o.quantity,
                             typeId: o.typeId
                         };
-                    this.list[r] = n
+                    if (parseInt(o.id) > 6)//take out demo data.
+                        this.list[r] = n
                 }
                 localStorage.setItem("cartList", JSON.stringify(this.list))
             },
