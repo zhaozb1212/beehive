@@ -2,7 +2,7 @@ angular.module('mxs.services', ['ngResource'])
     .run(["$rootScope", function ($rootScope) {
         var b = document.domain.replace(/^(.+?\.)??(?=(test\.)?[^.]+\.\w+$)/, "");
         $rootScope.ROOTHOST = b;
-        $rootScope.RESTBASE = 'http://' + $rootScope.ROOTHOST + "/beehive/microsite";
+        $rootScope.RESTBASE = 'http://www.' + $rootScope.ROOTHOST + "/beehive/microsite";
         $rootScope.defaultSig = {sig: "DBE8317A0D713425B738C762D1639492"};
     }])
 

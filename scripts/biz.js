@@ -262,9 +262,10 @@ angular.module('mxs.cart', [])
                     dishes: JSON.stringify(orderList)
                 },
                 success: function (res) {
+                    alert(JSON.stringify(res));
                     if (res.ret == 0) {
                         localStorage.setItem("cartList", "{}");
-                        $window.location.href = "#/detail/" + res.id;
+                        $window.location.href = "#/detail/" + res.orderId;
                     } else {
                         alert("订单提交失败：" + res.msg);
                     }
@@ -275,9 +276,7 @@ angular.module('mxs.cart', [])
             })
         }
     }])
-
-    .
-    factory('Cart', ['$q', '$rootScope', '$location', function ($q, $rootScope, $location) {
+    .factory('Cart', ['$q', '$rootScope', '$location', function ($q, $rootScope, $location) {
         var n = {
             list: {},
             add: function (e) {
