@@ -262,10 +262,10 @@ angular.module('mxs.cart', [])
                     dishes: JSON.stringify(orderList)
                 },
                 success: function (res) {
-                    alert(JSON.stringify(res));
+                    //alert(JSON.stringify(res));
                     if (res.ret == 0) {
                         localStorage.setItem("cartList", "{}");
-                        $window.location.href = "#/detail/" + res.orderId;
+                        $window.location.href = "#/detail/" + res.data.orderId;
                     } else {
                         alert("订单提交失败：" + res.msg);
                     }
