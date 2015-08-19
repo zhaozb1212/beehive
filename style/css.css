@@ -139,14 +139,14 @@ html {
 }
 
 .xs-header-title.flex, .xs-dish-control {
-    -webit-box-pack: center;
+    -webkit-box-pack: center;
     -ms-flex-pack: center;
     -webkit-justify-content: center;
     justify-content: center;
 }
 
 .xs-header, .tbill-list-item, .xs-dish-container, .xs-dish-footer, .xs-menu-cart, .cart-detail, .cart-control, .delivery-block, .cart-footer-laststep {
-    -webit-box-pack: justify;
+    -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     -webkit-justify-content: space-between;
     justify-content: space-between;
@@ -929,3 +929,63 @@ button.logreg-btn {
 }
 
 /*order detail end*/
+
+/*order list begin*/
+.trade-order {
+    display: block;
+    padding: .8rem 10px;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+    color: #333;
+}
+
+.torder-status {
+    font-size: .9rem;
+    margin-bottom: 8px;
+}
+
+.torder-time {
+    color: #999;
+    margin: 0 0 0 8px;
+    font-size: .8rem;
+    line-height: 1;
+    display: inline-block;
+}
+
+.torder-summary {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+}
+
+.torder_detail {
+    width: 70%;
+}
+
+.torder-misc {
+    width: 100%;
+}
+
+.torder-misc > .torder-distribution {
+    font-size: 1rem;
+    font-weight: 400;
+    display: block;
+    margin: 0;
+    line-height: 1.2;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.torder-misc > .total-cost {
+    margin: 2px 0 0;
+    font-size: .8rem;
+    color: #999;
+}
+
+/*order list end*/
