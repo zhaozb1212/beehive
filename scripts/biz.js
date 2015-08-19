@@ -5,9 +5,12 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
             height: 44
         }
     })
-    .controller('rootCtrl', ['$scope', '$rootScope', "userFactory", function ($scope, $rootScope, userFactory) {
+    .controller('rootCtrl', ['$scope', '$rootScope', "userFactory", "$window", function ($scope, $rootScope, userFactory, $window) {
         //init user
         userFactory.pullRemote();
+        if (location.href.indexOf("list.html") !== -1) {
+            $window.location.href = "#/list";
+        }
     }])
 
     .directive('skateShoes', ['$timeout', function (timeout) {
@@ -72,6 +75,54 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
         }
     }])
 
+    .controller("tradeCtrl", ['$scope', '$rootScope', '$q', '$http', 'userFactory', "$timeout", "$window", function ($scope, $rootScope, $q, $http, user, $timeout, $window) {
+        $scope.foodQuantity = function (order) {
+            var count = 0;
+            if (!order || !order.dishesType || !order.dishesType.length) return count;
+            var dishes = order.dishesType;
+            for (var dishIndex = 0, len = dishes.length; dishIndex < len; dishIndex++) {
+                var dishItem = dishes[dishIndex];
+                count += dishItem.count;
+            }
+            return count;
+        };
+        var timeer;
+        var init = function () {
+            if (user.user.id) {
+                $timeout.cancel(timeer);
+            } else {
+                timeer = $timeout(init, 100);
+                return;
+            }
+            $http({
+                url: $rootScope.RESTBASE + "/order/userorderlist",
+                method: "post",
+                params: {
+                    sig: $rootScope.defaultSig.sig,
+                    userId: user.user.id
+                }
+            }).success(function (res) {
+                if (res.ret == 0) {
+                    $scope.orders = res.data;
+                    var orderStatusEnum = ["处理中", "配送中", "已完成", "已取消"];
+                    var len = res.data.length;
+                    $scope.hasRecord = !!len;
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        item.status_title = orderStatusEnum[item.status];
+                    }
+                } else {
+                    alert("获取订单信息失败：" + res.msg);
+                }
+            }).error(function (res) {
+                alert("获取订单信息失败：" + JSON.stringify(res));
+                console.log("获取订单信息失败：", res);
+            });
+        };
+
+        timeer = $timeout(init, 100);
+    }])
+
     .directive('addNote', [function () {
         return function (e, t) {
             e.note = e.note || "", e.noteClick = function (t) {
@@ -99,6 +150,9 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
         }).when('/detail/:id', {
             templateUrl: 'tpl/order_detail.html',
             controller: 'tradeOrderCtrl'
+        }).when('/list', {
+            templateUrl: 'tpl/order_list.html',
+            controller: 'tradeCtrl'
         }).otherwise({
             templateUrl: 'tpl/menuList.html',
             controller: 'listCtrl'
@@ -130,8 +184,7 @@ angular.module("mxs")
             };
         });
     }])
-    .
-    factory("orderFactory", ['$q', '$rootScope', '$q', '$http', function ($scope, $rootScope, $q, $http) {
+    .factory("orderFactory", ['$q', '$rootScope', '$q', '$http', function ($scope, $rootScope, $q, $http) {
         var orderFactory = {};
 
         orderFactory.order = {
@@ -502,7 +555,6 @@ angular.module("mxs")
                     },
                     success: function (data) {
                         if (data.ret == 0) {
-                            alert(1);
                             alert("订单提交成功: " + JSON.stringify(data));
                             localStorage.setItem("cartList", "{}");
                             $window.location.href = "#/detail";
