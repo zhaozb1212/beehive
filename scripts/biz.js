@@ -501,6 +501,7 @@ angular.module("mxs")
                         code: getUserCode() + ""
                     }
                 }).success(function (data) {
+                    //alert(JSON.stringify(data));
                     _this.setUser(data.data);
                 })
             }
