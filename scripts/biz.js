@@ -302,11 +302,11 @@ angular.module('mxs.cart', [])
                 $window.location.href = "#/register";
                 return;
             }
-            $.ajax({
+            $http({
                 url: rootScope.RESTBASE + "/order/commitorder",
-                type: "post",
+                method: "post",
                 dataType: 'JSON',
-                data: {
+                params: {
                     sig: rootScope.defaultSig.sig,
                     userId: User.user.id || -1,
                     voucherId: 0,
@@ -315,19 +315,20 @@ angular.module('mxs.cart', [])
                     totalPrice: Cart.totalPrice(),
                     dishes: JSON.stringify(orderList)
                 },
-                success: function (res) {
-                    //alert(JSON.stringify(res));
-                    if (res.ret == 0) {
-                        localStorage.setItem("cartList", "{}");
-                        $window.location.href = "#/detail/" + res.data.orderId;
-                    } else {
-                        alert("订单提交失败：" + res.msg);
-                    }
-                },
                 error: function (data) {
-                    alert("fail: " + JSON.stringify(data));
+
                 }
-            })
+            }).success(function (res) {
+                //alert(JSON.stringify(res));
+                if (res.ret == 0) {
+                    localStorage.setItem("cartList", "{}");
+                    $window.location.href = "#/detail/" + res.data.orderId;
+                } else {
+                    alert("订单提交失败：" + res.msg);
+                }
+            }).error(function (data) {
+                alert("fail: " + JSON.stringify(data));
+            });
         }
     }])
     .factory('Cart', ['$q', '$rootScope', '$location', function ($q, $rootScope, $location) {

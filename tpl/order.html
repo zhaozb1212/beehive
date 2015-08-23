@@ -2,17 +2,17 @@
     <a class="xs-header-back" ng-href="#/cart"><span></span>返回</a>
 
     <div class="xs-header-title flex">
-        <span class="header-rst-name">送餐信息</span>
+        <span class="header-rst-name">配餐信息</span>
     </div>
 </header>
 <section class='ui-padding-block delivery-block' ng-click="showAddr = !showAddr">
     <div>
         <p class="clear-margin" ng-if="crtAddress">
             <span ng-show="crtAddress.name" ng-bind="crtAddress.name"></span>
-            <span ng-bind="crtAddress.tel"></span>
+            <span ng-bind="crtAddress.address"></span>
         </p>
 
-        <p class="class-margin" ng-if="!crtAddress">选择送餐地址</p>
+        <p class="class-margin" ng-if="!crtAddress">选择取餐地址</p>
     </div>
     <span class='ui-enter ui-gt'>&gt;</span>
 </section>
