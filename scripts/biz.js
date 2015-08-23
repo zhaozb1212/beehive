@@ -50,17 +50,18 @@ angular.module("mxs", ['ngRoute', 'ngResource', 'mxs.cart', 'mxs.services'])
     }])
 
     .controller('listCtrl', ['$scope', '$resource', 'dishes', 'Cart', function (scope, $resource, dishes, Cart) {
-        var cacheDishes, cacheDishType;
+        var cacheDishes, cacheDishType, typeKeys, tempDishes;
         dishes.save({}, function (dishes) {
             scope.dishType = cacheDishType = dishes.data.dishesType;
+            typeKeys = Object.keys(cacheDishType);
             cacheDishes = dishes.data.dishes;
 
-            var tempDishes = cacheDishes && cacheDishes.filter(function (item, index, arr) {
-                    return item.typeId === 1;
+            tempDishes = cacheDishes && cacheDishes.filter(function (item, index, arr) {
+                    return item.typeId === parseInt(typeKeys[0]);
                 });
             scope.dishes = tempDishes;
         });
-        scope.currentIndex = 1;
+        scope.currentIndex = 0;
         scope.selectMenu = function (index, type) {
             (scope.currentIndex !== index) && (scope.currentIndex = index);
 
