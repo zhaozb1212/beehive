@@ -42,6 +42,6 @@
         <li class="tblock-list-item" ng-bind="'取餐点：' + order.distribution"></li>
         <li class="tblock-list-item" ng-bind="'支付方式：' + (order.orderType === 1 ? '在线支付' : '餐到付款')"></li>
         <li class="tblock-list-item" ng-bind="'下单时间：' + (order.createTime | date: 'yyyy-MM-dd HH:mm')"></li>
-        <li class="tblock-list-item" ng-bind="'备注：' + order.remark" ng-if="order.remark"></li>
+        <li class="tblock-list-item" ng-bind="'备注：' + order.remark">123</li>
     </ul>
 </section>

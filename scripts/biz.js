@@ -356,7 +356,8 @@ angular.module('mxs.cart', [])
                             name: o.name,
                             price: o.price,
                             quantity: o.quantity,
-                            typeId: o.typeId
+                            typeId: o.typeId,
+                            remark: o.remark
                         };
                     if (parseInt(o.id) > 6)//take out demo data.
                         this.list[r] = n
